@@ -293,11 +293,24 @@
 (function(){
   "use strict";
 
-  var TODAY = new Date(); TODAY.setHours(0,0,0,0);
+  /* "오늘"을 뷰어의 로컬 시간대와 무관하게 KST(UTC+9) 기준으로 고정.
+     모든 날짜는 Date.UTC로 만든 "순수 달력값"이라 브라우저 타임존 설정과 상관없이
+     자정을 넘기면 다음날 KST 기준으로 D-day가 갱신된다. */
+  function kstTodayParts(){
+    // Date.now()는 브라우저 시간대와 무관한 절대 UTC epoch ms이므로,
+    // 여기에 9시간만 더하면 그 값의 UTC 필드가 곧 KST 벽시계 날짜가 된다.
+    var kst = new Date(Date.now() + 9 * 60 * 60000);
+    return { y: kst.getUTCFullYear(), m: kst.getUTCMonth() + 1, d: kst.getUTCDate() };
+  }
+  var _kp = kstTodayParts();
+  var TODAY = new Date(Date.UTC(_kp.y, _kp.m - 1, _kp.d)); // KST 기준 오늘 00:00
+
   var Y = 2026;
-  function d(m, day, hh){ var x = new Date(Y, m-1, day, hh===undefined?23:hh, hh===undefined?59:0,0,0); return x; }
-  function days(to){ var a = new Date(to.getFullYear(),to.getMonth(),to.getDate()); return Math.round((a - TODAY)/86400000); }
-  function md(dt){ return (dt.getMonth()+1) + "/" + dt.getDate(); }
+  function d(m, day, hh){
+    return new Date(Date.UTC(Y, m - 1, day, hh === undefined ? 23 : hh, hh === undefined ? 59 : 0, 0, 0));
+  }
+  function days(to){ var a = Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), to.getUTCDate()); return Math.round((a - TODAY)/86400000); }
+  function md(dt){ return (dt.getUTCMonth()+1) + "/" + dt.getUTCDate(); }
 
   var GROUPS = [
     { id:"web3",   label:"Web3 · 블록체인",
@@ -723,8 +736,8 @@
   });
 
   /* summary */
-  var m = TODAY.getMonth()+1, dd = TODAY.getDate();
-  document.getElementById("today-str").textContent = TODAY.getFullYear() + "." + (m<10?"0":"") + m + "." + (dd<10?"0":"") + dd;
+  var m = TODAY.getUTCMonth()+1, dd = TODAY.getUTCDate();
+  document.getElementById("today-str").textContent = TODAY.getUTCFullYear() + "." + (m<10?"0":"") + m + "." + (dd<10?"0":"") + dd + " (KST)";
   document.getElementById("n-open").textContent = openCount;
   document.getElementById("n-hot").textContent = hotCount;
 
