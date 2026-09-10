@@ -1039,6 +1039,8 @@
   var board = document.getElementById("board");
   var openCount = 0, hotCount = 0;
 
+  function renderBoard(){
+  board.innerHTML = ""; openCount = 0; hotCount = 0;
   GROUPS.forEach(function(grp){
     var items = C.filter(function(c){ return c.g === grp.id; })
                  .sort(function(a,b){ return a.end - b.end; });
@@ -1116,14 +1118,26 @@
 
     board.appendChild(sec);
   });
+  updateSummary();
+  applyFilter();
+  }
 
   /* summary */
-  var m = TODAY.getUTCMonth()+1, dd = TODAY.getUTCDate();
-  document.getElementById("today-str").textContent = TODAY.getUTCFullYear() + "." + (m<10?"0":"") + m + "." + (dd<10?"0":"") + dd + " (KST)";
-  document.getElementById("n-open").textContent = openCount;
-  document.getElementById("n-hot").textContent = hotCount;
+  function updateSummary(){
+    var m = TODAY.getUTCMonth()+1, dd = TODAY.getUTCDate();
+    document.getElementById("today-str").textContent = TODAY.getUTCFullYear() + "." + (m<10?"0":"") + m + "." + (dd<10?"0":"") + dd + " (KST)";
+    document.getElementById("n-open").textContent = openCount;
+    document.getElementById("n-hot").textContent = hotCount;
+  }
 
   /* filters */
+  var currentFilter = "all";
+  function applyFilter(){
+    Array.prototype.forEach.call(board.querySelectorAll("section"), function(s){
+      s.hidden = !(currentFilter === "all" || s.getAttribute("data-group") === currentFilter);
+    });
+  }
+
   var bar = document.getElementById("filters");
   var all = document.createElement("button");
   all.className = "chip"; all.type = "button";
@@ -1149,10 +1163,8 @@
     Array.prototype.forEach.call(bar.querySelectorAll(".chip"), function(c){
       c.setAttribute("aria-pressed", c === btn ? "true" : "false");
     });
-    var t = btn.dataset.target;
-    Array.prototype.forEach.call(board.querySelectorAll("section"), function(s){
-      s.hidden = !(t === "all" || s.getAttribute("data-group") === t);
-    });
+    currentFilter = btn.dataset.target;
+    applyFilter();
   });
 
   /* past table */
@@ -1318,6 +1330,25 @@
 
   function rerender(){ renderBundles(); renderFriday(); }
 
+  /* ---------- 자정(KST) 감시 ----------
+     페이지를 켜둔 채 날짜가 넘어가도 D-day가 멈춰 있지 않게 한다.
+     1분마다 KST 달력일을 확인하고, 바뀌었으면 TODAY를 다시 잡아 전체를 다시 그린다. */
+  function refreshDate(){
+    var p = kstTodayParts();
+    if(p.y === _kp.y && p.m === _kp.m && p.d === _kp.d) return false;
+    _kp = p;
+    TODAY = new Date(Date.UTC(p.y, p.m - 1, p.d));
+    renderBoard();      // 마감순 뷰 (D-day, 진행바, 상단 집계)
+    rerender();         // 번들 뷰 · 금요일 뷰
+    return true;
+  }
+  setInterval(refreshDate, 60000);
+  // 절전에서 깨어나거나 탭을 다시 볼 때는 즉시 확인 (타이머가 밀려 있을 수 있음)
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden) refreshDate();
+  });
+  window.addEventListener("focus", refreshDate);
+
   /* --- 이벤트 위임: 픽 버튼 --- */
   document.addEventListener("click", function(e){
     var btn = e.target.closest(".pickset button");
@@ -1379,6 +1410,7 @@
   /* --- 시작 --- */
   loadLocal();
   renderWho();
+  renderBoard();
   rerender();
   connect();
 })();
