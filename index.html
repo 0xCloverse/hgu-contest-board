@@ -253,6 +253,161 @@
     .filterbar{gap:6px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ================= 협업 레이어 ================= */
+
+  /* --- 상단 신원/동기화 바 --- */
+  .crew{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    margin-top:20px;padding:12px 14px;border-radius:8px;
+    background:var(--surface);border:1px solid var(--rule);
+  }
+  .crew-label{font-size:12px;color:var(--ink-3);font-weight:500;white-space:nowrap}
+  .who{display:flex;gap:6px}
+  .who button{
+    font:600 13px/1 "IBM Plex Sans KR",sans-serif;padding:8px 14px;border-radius:6px;
+    border:1px solid var(--rule);background:var(--paper);color:var(--ink-2);cursor:pointer;
+  }
+  .who button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  .who button:hover{border-color:var(--accent)}
+  .sync{
+    margin-left:auto;display:flex;align-items:center;gap:7px;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);white-space:nowrap;
+  }
+  .sync .led{width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex:none}
+  .sync[data-state="live"] .led{background:var(--u-ok)}
+  .sync[data-state="live"]{color:var(--u-ok)}
+  .sync[data-state="off"] .led{background:var(--u-warm)}
+  .sync[data-state="off"]{color:var(--u-warm)}
+
+  /* --- 탭 --- */
+  .tabs{
+    position:sticky;top:0;z-index:30;background:var(--paper);
+    display:flex;gap:2px;padding:14px 0 0;margin-top:24px;
+    border-bottom:1px solid var(--rule);
+  }
+  .tabs button{
+    font:600 14px/1 "IBM Plex Sans KR",sans-serif;padding:11px 16px;cursor:pointer;
+    border:none;background:none;color:var(--ink-3);
+    border-bottom:2px solid transparent;margin-bottom:-1px;
+  }
+  .tabs button:hover{color:var(--ink)}
+  .tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+  .tabs .badge{
+    font-family:"IBM Plex Mono",monospace;font-size:10px;margin-left:6px;
+    background:var(--u-hot);color:var(--paper);border-radius:8px;padding:2px 6px;
+    font-variant-numeric:tabular-nums;
+  }
+  :root[data-theme="dark"] .tabs .badge{color:#0F1216}
+
+  /* --- 번들 카드 --- */
+  .bundle{
+    border:1px solid var(--rule);border-radius:10px;background:var(--surface);
+    padding:20px;margin-top:16px;
+  }
+  .bundle-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .bundle-key{
+    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px;
+    background:var(--accent);color:var(--on-accent);border-radius:4px;padding:3px 7px;flex:none;
+  }
+  .bundle-top h3{font-family:Hahmlet,serif;font-weight:700;font-size:19px;margin:0;letter-spacing:-.01em}
+  .bundle-yield{
+    margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:var(--accent);font-weight:600;white-space:nowrap;
+  }
+  .bundle-what{
+    margin:11px 0 0;font-size:13.5px;color:var(--ink-2);
+    border-left:2px solid var(--accent);padding-left:11px;
+  }
+  .bundle-what b{color:var(--ink)}
+  .bundle-warn{
+    margin:9px 0 0;font-size:12.5px;color:var(--flag);
+    border-left:2px solid var(--flag);padding-left:11px;
+  }
+  .bundle-pot{
+    margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:var(--ink-3);font-variant-numeric:tabular-nums;
+  }
+  .bundle-list{margin-top:14px;border-top:1px solid var(--rule-soft)}
+
+  /* --- 번들 안 공모전 줄 --- */
+  .brow{
+    display:grid;grid-template-columns:56px 1fr auto;gap:0 14px;align-items:center;
+    padding:12px 0;border-bottom:1px solid var(--rule-soft);
+  }
+  .brow:last-child{border-bottom:none}
+  .brow-d{
+    font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+    font-size:15px;font-weight:600;text-align:right;
+  }
+  .brow-name{font-size:14px;line-height:1.4}
+  .brow-name a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent-soft)}
+  .brow-name a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .brow-name .sub{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+
+  /* --- 픽 컨트롤 --- */
+  .picks{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .pickset{display:flex;gap:3px}
+  .pickset button{
+    font:500 11.5px/1 "IBM Plex Sans KR",sans-serif;padding:6px 9px;cursor:pointer;
+    border:1px solid var(--rule);background:var(--paper);color:var(--ink-3);
+  }
+  .pickset button:first-child{border-radius:5px 0 0 5px}
+  .pickset button:last-child{border-radius:0 5px 5px 0}
+  .pickset button:hover{border-color:var(--ink-3);color:var(--ink)}
+  .pickset button[aria-pressed="true"][data-v="yes"]{background:var(--u-ok-bg);border-color:var(--u-ok);color:var(--u-ok);font-weight:600}
+  .pickset button[aria-pressed="true"][data-v="maybe"]{background:var(--u-warm-bg);border-color:var(--u-warm);color:var(--u-warm);font-weight:600}
+  .pickset button[aria-pressed="true"][data-v="no"]{background:var(--u-gone-bg);border-color:var(--ink-3);color:var(--ink-2);font-weight:600}
+  .peer{
+    font-size:11.5px;color:var(--ink-3);white-space:nowrap;
+    display:inline-flex;align-items:center;gap:5px;
+  }
+  .peer .v{font-weight:600;padding:3px 7px;border-radius:4px;background:var(--surface-2);color:var(--ink-3)}
+  .peer .v[data-v="yes"]{background:var(--u-ok-bg);color:var(--u-ok)}
+  .peer .v[data-v="maybe"]{background:var(--u-warm-bg);color:var(--u-warm)}
+  .peer .v[data-v="no"]{background:var(--u-gone-bg);color:var(--ink-2)}
+
+  /* --- 메모 --- */
+  .memo{margin-top:12px;display:flex;gap:8px;align-items:flex-start}
+  .memo textarea{
+    flex:1;font:400 13.5px/1.55 "IBM Plex Sans KR",sans-serif;color:var(--ink);
+    background:var(--paper);border:1px solid var(--rule);border-radius:6px;
+    padding:9px 11px;resize:vertical;min-height:40px;
+  }
+  .memo textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+  .memo textarea::placeholder{color:var(--ink-3)}
+  .memo-by{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);
+    white-space:nowrap;padding-top:12px;
+  }
+
+  /* --- 금요일 뷰 --- */
+  .fri-group{margin-top:26px}
+  .fri-head{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+  .fri-head h3{font-family:Hahmlet,serif;font-weight:700;font-size:18px;margin:0}
+  .fri-head .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
+  .fri-head .dot2{width:8px;height:8px;border-radius:50%;flex:none}
+  .fri-note{font-size:13px;color:var(--ink-3);margin:0 0 10px;max-width:62ch}
+  .fri-item{
+    display:grid;grid-template-columns:56px 1fr auto;gap:0 14px;align-items:center;
+    padding:11px 0;border-top:1px solid var(--rule-soft);
+  }
+  .fri-item .memo-line{
+    grid-column:2/-1;font-size:12.5px;color:var(--ink-2);margin-top:5px;
+    border-left:2px solid var(--rule);padding-left:9px;
+  }
+  .fri-empty{font-size:13px;color:var(--ink-3);padding:10px 0}
+
+  @media (max-width:620px){
+    .brow,.fri-item{grid-template-columns:48px 1fr;gap:6px 10px}
+    .picks{grid-column:1/-1;justify-content:flex-start}
+    .bundle{padding:16px}
+    .bundle-yield{margin-left:0;width:100%}
+    .tabs{overflow-x:auto}
+    .tabs button{white-space:nowrap;padding:11px 12px;font-size:13px}
+    .crew{gap:10px}
+    .sync{margin-left:0;width:100%}
+  }
 </style>
 
 <div class="wrap">
@@ -265,11 +420,35 @@
       <span>수록 <b id="n-open">—</b>건</span>
       <span>2주 내 마감 <b id="n-hot">—</b>건</span>
     </div>
+
+    <div class="crew">
+      <span class="crew-label">나는</span>
+      <div class="who" id="who"></div>
+      <div class="sync" id="sync" data-state="init"><span class="led"></span><span id="sync-txt">연결 중</span></div>
+    </div>
   </header>
 
-  <nav class="filterbar" id="filters" aria-label="분야 필터"></nav>
+  <nav class="tabs" id="tabs" role="tablist"></nav>
 
-  <main id="board"></main>
+  <section id="view-bundle" role="tabpanel">
+    <p class="sec-note" style="margin-top:18px">
+      제출물 한 벌로 여러 곳을 커버할 수 있게 묶었습니다.
+      <b>아이템이 그대로 재활용되는 묶음</b>과 <b>제작 방식만 재활용되는 묶음</b>은 성격이 다르니 구분해서 보세요.
+    </p>
+    <div id="bundles"></div>
+  </section>
+
+  <section id="view-deadline" role="tabpanel" hidden>
+    <nav class="filterbar" id="filters" aria-label="분야 필터"></nav>
+    <main id="board"></main>
+  </section>
+
+  <section id="view-friday" role="tabpanel" hidden>
+    <p class="sec-note" style="margin-top:18px">
+      두 사람 선택을 맞춰본 결과입니다. <b>갈린 것부터</b> 이야기하면 회의가 빨리 끝납니다.
+    </p>
+    <div id="friday"></div>
+  </section>
 
   <section id="past">
     <div class="sec-head"><h2>올해는 끝났지만, 내년에 노릴 것</h2></div>
@@ -631,6 +810,68 @@
   }
   ];
 
+  /* ---------- 사람 ---------- */
+  var PEOPLE = [
+    { id:"tae",  name:"태영" },
+    { id:"jian", name:"지안" }
+  ];
+
+  /* ---------- 아이템 번들 ----------
+     같은 제출물 한 벌로 커버되는 묶음. reuse는 "무엇이 재활용되는가"를 구분한다.
+     - item : 아이디어 자체가 그대로 넘어감 (주제문이 사실상 동일)
+     - craft: 아이디어는 매번 새로 짜야 하고, 제작 방식·에셋만 재활용됨      */
+  var BUNDLES = [
+    {
+      key:"B", title:"지역·공공 AI 서비스", reuse:"item",
+      yield:"기획서 1벌 → 5곳",
+      what:"<b>아이템이 그대로 재활용됩니다.</b> 다섯 곳 주제문이 전부 \"AI로 공공·지역 문제를 푼다\"로 사실상 같고, 제출물도 기획서 PDF로 동일합니다. 대상 기관 이름과 데이터 출처만 갈아끼우면 됩니다.",
+      warn:"경북 AX가 9/15로 가장 빠릅니다. 여기 먼저 넣고 반응을 본 뒤 나머지에 다듬어 넣는 순서가 자연스럽습니다.",
+      members:["2026 경상북도 도민체감형 AX 경진대회","2026년 GovTech 창업 경진대회","2026 AI·디지털 기반 사회문제 해결 챌린지","2026년 창원시 AI·데이터 활용 공모전","2026 데이터+AI 혁신챌린지 : 데이터안심구역 경진대회"]
+    },
+    {
+      key:"F", title:"전통·지역문화 × 생성형 AI 영상", reuse:"item",
+      yield:"영상 컨셉 1개 → 3곳",
+      what:"<b>컨셉과 에셋이 둘 다 재활용됩니다.</b> 셋 다 \"전통·지역 소재를 생성형 AI로 재해석\"이라는 같은 요구입니다. 프롬프트와 생성 이미지를 상당 부분 공유할 수 있고, 길이·비율만 각 요강에 맞추면 됩니다.",
+      warn:"규격이 다릅니다. 문화데이터 10초~1분 / AI헤리티지 60초 이내 / 충북 3~5분. 가장 긴 충북용으로 만들어 두고 잘라 쓰는 편이 낫습니다.",
+      members:["[문화체육관광부×한국문화정보원] 문화데이터 활용 영상 제작 AI 챌린지","[2026 디지털헤리티지페스타] AI 헤리티지 공모전","2026 충북 AI광고제"]
+    },
+    {
+      key:"C", title:"금융 · 블록체인 서비스", reuse:"item",
+      yield:"서비스 기획 1벌 → 2곳",
+      what:"<b>아이템이 재활용됩니다.</b> 포용금융·블록체인 신원 인증이라는 축이 겹칩니다. 이 목록에서 <b>단일 상금이 가장 큰 조합</b>입니다(핀테크 대상 2,000만원).",
+      warn:"GWDC 해커톤(9/28~30)에서 만든 결과물을 그대로 이쪽으로 흘려보낼 수 있습니다. 핀테크 마감이 10/8이라 시간도 맞습니다.",
+      members:["(iM뱅크) 2026 AI Blockchain 경진대회","2026 제9회 핀테크 아이디어 공모전"]
+    },
+    {
+      key:"D", title:"창업 · 사업계획서", reuse:"item",
+      yield:"사업계획서 1벌 → 3곳",
+      what:"<b>같은 사업계획서를 양식만 바꿔 냅니다.</b> 문제정의·솔루션·시장·BM 구조가 공통이라, 한 번 제대로 쓰면 각 대회 서식에 맞춰 재구성하는 작업만 남습니다.",
+      warn:"로켓피치는 <b>타 대회 수상 이력이 있는 아이템 자체가 불가</b>합니다. 여기 낼 아이템은 다른 곳에서 먼저 수상하면 못 씁니다.",
+      members:["2026 전국 로켓피치 경진대회","2026 AI 창업 경진대회","제22회 한국능률협회컨설팅(KMAC) 경영혁신 대학(원)생 공모전"]
+    },
+    {
+      key:"A", title:"세로형 숏폼 AI 영상", reuse:"craft",
+      yield:"제작 파이프라인 1개 → 5곳",
+      what:"<b>아이디어는 재활용되지 않습니다.</b> 다섯 곳 모두 주제가 브랜드·기관으로 지정돼 있어 내용은 매번 새로 짜야 합니다. 대신 <b>툴 조합·프롬프트 세팅·편집 템플릿</b>이 그대로 넘어가서, 두 번째부터는 제작 시간이 크게 줄어듭니다.",
+      warn:"세븐일레븐은 <b>상업적 이용이 가능한 유료 플랜</b>으로 만든 영상만 인정합니다. 무료 요금제 결과물은 실격입니다. 농산물은 타 공모전 <b>기존 접수작</b>도 금지라 제일 빡빡합니다.",
+      members:["[세븐일레븐] K-비빔밥 AI 광고제 「ㄸ뚜ㅁ뜨뜨」","GS칼텍스 에너지플러스 앱 '바로주유' 영상 공모전","2026 우리 농산물 과채류 매력 알리기 콘텐츠 공모전","제44회 교통안전 홍보작품 공모전","2026년 국가정책연구포털(NKIS) AI 쇼츠 영상공모전"]
+    },
+    {
+      key:"—", title:"단독 — 묶이지 않는 것", reuse:"solo",
+      yield:"각각 따로",
+      what:"지정 데이터셋이나 현장 참석이 걸려 있어 다른 곳과 공유가 안 되는 건들입니다. <b>할 거면 그것만을 위해 시간을 따로 빼야 합니다.</b>",
+      warn:"",
+      members:["GWDC 2026 Korea 해커톤","2026 뉴스빅데이터 해커톤","제6회 K-인공지능(AI) 제조데이터 분석 경진대회","제3회 미래융합인재 발굴 소프트웨어 챌린지","2026 국방 AI 경진대회 (MAICON)","2026 해운·항만·물류 AX 혁신 아이디어 공모전","2026 AI·디지털 논문공모전","AI노출지수 & 카나리아 대시보드 네이밍 공모전","전국민 AI 활용사례 공모전 시즌3"]
+    },
+    {
+      key:"✕", title:"지원 자격 안 됨", reuse:"blocked",
+      yield:"검토 불필요",
+      what:"주제는 맞는데 <b>학적·주소지 조건에서 걸립니다.</b> 목록에서 지우지 않고 남겨둔 건, 나중에 \"이건 왜 없지?\" 하고 다시 찾아보는 일을 막기 위해서입니다.",
+      warn:"",
+      members:["2026년 전통시장 디지털 혁신 아이디어 공모전","2026년 서울 영테크 공모전"]
+    }
+  ];
+
   var PAST = [
     ["AI ROOKIE (인공지능 루키) 대회","과기정통부 · TTA","3/27 ~ 5/8","총 3.5억원 · 1위 5,000만원. 전공 무관 대학생 전용, 만 34세 이하 학사 미소지자. 학부생 대상 국내 최대 규모."],
     ["FIN:NECT 핀테크 챌린지","카카오뱅크 · 한국핀테크지원센터","4/13 ~ 5/25","총 2,600만원 + 우수 6팀 TechCrunch Disrupt(샌프란시스코) 참관. 금융/AI 2개 분야, 대학생·예비창업자 전용."],
@@ -643,6 +884,147 @@
     ["BUIDL CTC 2026 Fall","크레딧코인 · 크레딧 랩스","8/13 ~ 9/6","$15,000. DeFi·RWA·DePIN·게이밍·AI 5개 트랙. 상위 3팀 CEIP 투자 프로그램 패스트트랙."],
     ["2026 코드게이트 AI 스타트업 해커톤","코드게이트","~7/8","총 2,500만원."]
   ];
+
+  /* ================= 공유 상태 (Firebase Realtime Database) =================
+     SDK를 싣지 않는다. 읽기는 EventSource(SSE), 쓰기는 fetch PUT.
+     Firebase RTDB REST가 text/event-stream을 그대로 지원해서 라이브러리가 필요 없다. */
+  var DB   = "https://hgu-contest-default-rtdb.asia-southeast1.firebasedatabase.app";
+  var ROOT = "/board/v1";
+
+  var STATE = { picks:{}, memos:{} };   // picks[cid][personId] = "yes"|"maybe"|"no"
+  var ME = null;                        // 이 기기의 사용자 id
+  var LOCAL_KEY = "hgu.board.v1";       // Firebase가 죽었을 때의 대비책
+
+  /* 공모전 이름 → Firebase 키. 한글은 키로 쓸 수 있고, 금지문자만 털어낸다. */
+  function cid(name){
+    return name.replace(/[.$#\[\]\/\s]/g, "").slice(0, 40);
+  }
+
+  function loadLocal(){
+    try{
+      var raw = localStorage.getItem(LOCAL_KEY);
+      if(raw) STATE = JSON.parse(raw);
+    }catch(e){}
+    if(!STATE.picks) STATE.picks = {};
+    if(!STATE.memos) STATE.memos = {};
+  }
+  function saveLocal(){
+    try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(STATE)); }catch(e){}
+  }
+
+  var syncEl = document.getElementById("sync");
+  var syncTxt = document.getElementById("sync-txt");
+  function setSync(state, msg){
+    syncEl.setAttribute("data-state", state);
+    syncTxt.textContent = msg;
+  }
+
+  /* SSE 경로 문자열을 STATE에 반영. path는 "/", "/picks/xxx/tae" 같은 형태. */
+  function applyAt(path, data, merge){
+    if(path === "/" || path === ""){
+      if(!merge){
+        STATE = data || { picks:{}, memos:{} };
+        if(!STATE.picks) STATE.picks = {};
+        if(!STATE.memos) STATE.memos = {};
+      } else if(data){
+        Object.keys(data).forEach(function(k){ STATE[k] = data[k]; });
+      }
+      return;
+    }
+    var parts = path.split("/").filter(Boolean);
+    var last = parts.pop();
+    var node = STATE;
+    parts.forEach(function(p){
+      if(typeof node[p] !== "object" || node[p] === null) node[p] = {};
+      node = node[p];
+    });
+    if(data === null){ delete node[last]; }
+    else if(merge && typeof data === "object" && data !== null){
+      if(typeof node[last] !== "object" || node[last] === null) node[last] = {};
+      Object.keys(data).forEach(function(k){
+        if(data[k] === null) delete node[last][k]; else node[last][k] = data[k];
+      });
+    } else { node[last] = data; }
+  }
+
+  var esRef = null, sseFailures = 0;
+  function connect(){
+    if(typeof EventSource === "undefined"){ setSync("off","이 브라우저는 실시간 미지원"); return; }
+    try{ esRef = new EventSource(DB + ROOT + ".json"); }
+    catch(e){ setSync("off","연결 실패 · 내 기기에만 저장"); return; }
+
+    function handle(merge){
+      return function(ev){
+        var msg;
+        try{ msg = JSON.parse(ev.data); }catch(e){ return; }
+        if(!msg) return;
+        applyAt(msg.path, msg.data, merge);
+        if(!STATE.picks) STATE.picks = {};
+        if(!STATE.memos) STATE.memos = {};
+        saveLocal();
+        rerender();
+        sseFailures = 0;
+        setSync("live","실시간 연결됨");
+      };
+    }
+    esRef.addEventListener("put", handle(false));
+    esRef.addEventListener("patch", handle(true));
+    esRef.onopen = function(){ sseFailures = 0; setSync("live","실시간 연결됨"); };
+    esRef.onerror = function(){
+      sseFailures++;
+      // EventSource는 알아서 재접속한다. 계속 실패할 때만 사용자에게 알린다.
+      if(sseFailures >= 2) setSync("off","동기화 끊김 · 내 기기에만 저장");
+    };
+  }
+
+  /* 낙관적 쓰기: 화면을 먼저 바꾸고 서버에 보낸다. 실패해도 로컬 값은 유지. */
+  function push(path, value){
+    saveLocal();
+    fetch(DB + ROOT + path + ".json", {
+      method: value === null ? "DELETE" : "PUT",
+      headers: { "Content-Type":"application/json" },
+      body: value === null ? undefined : JSON.stringify(value)
+    }).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+    }).catch(function(){
+      setSync("off","저장 실패 · 내 기기에만 저장");
+    });
+  }
+
+  /* ---------- 픽 / 메모 ---------- */
+  function getPick(name, person){
+    var p = STATE.picks[cid(name)];
+    return p && p[person] ? p[person] : null;
+  }
+  function setPick(name, value){
+    if(!ME) { alert("먼저 위에서 '나는 태영 / 지안'을 골라주세요."); return; }
+    var k = cid(name);
+    if(!STATE.picks[k]) STATE.picks[k] = {};
+    if(STATE.picks[k][ME] === value){        // 같은 걸 다시 누르면 해제
+      delete STATE.picks[k][ME];
+      push("/picks/" + k + "/" + ME, null);
+    } else {
+      STATE.picks[k][ME] = value;
+      push("/picks/" + k + "/" + ME, value);
+    }
+    rerender();
+  }
+  function getMemo(key){ return STATE.memos[key] || null; }
+  function setMemo(key, text){
+    if(!ME) return;
+    if(!text){
+      delete STATE.memos[key];
+      push("/memos/" + key, null);
+    } else {
+      STATE.memos[key] = { text:text, by:ME, at:Date.now() };
+      push("/memos/" + key, STATE.memos[key]);
+    }
+  }
+  function personName(id){
+    for(var i=0;i<PEOPLE.length;i++) if(PEOPLE[i].id === id) return PEOPLE[i].name;
+    return id;
+  }
+  var PICK_LABEL = { yes:"하자", maybe:"고민", no:"패스" };
 
   /* ---------- render ---------- */
   function urgency(n, rolling){
@@ -781,5 +1163,223 @@
                    '<td class="when">' + esc(r[2]) + '</td><td>' + esc(r[3]) + '</td>';
     pb.appendChild(tr);
   });
+
+  /* ================= 협업 뷰 ================= */
+
+  var byName = {};
+  C.forEach(function(c){ byName[c.name] = c; });
+
+  /* 공모전 → 소속 번들. 금요일 뷰에서 "이건 어떤 아이템으로 나가는가"를 붙여주기 위함. */
+  var bundleOf = {};
+  BUNDLES.forEach(function(b){
+    b.members.forEach(function(n){ bundleOf[n] = b; });
+  });
+
+  function ddayOf(c){
+    if(c.rolling) return { txt:"상시", n:999, cls:"u-roll" };
+    var n = days(c.end);
+    return { txt:(n < 0 ? "마감" : "D-" + n), n:n, cls:urgency(n, false) };
+  }
+
+  /* --- 픽 컨트롤 HTML --- */
+  function picksHTML(name){
+    var h = '<div class="picks">';
+    h += '<div class="pickset" data-name="' + esc(name) + '">';
+    ["yes","maybe","no"].forEach(function(v){
+      var on = ME && getPick(name, ME) === v;
+      h += '<button type="button" data-v="' + v + '" aria-pressed="' + (on?"true":"false") + '">' + PICK_LABEL[v] + '</button>';
+    });
+    h += '</div>';
+    PEOPLE.forEach(function(p){
+      if(p.id === ME) return;
+      var v = getPick(name, p.id);
+      h += '<span class="peer">' + esc(p.name) +
+           '<span class="v"' + (v?' data-v="'+v+'"':'') + '>' + (v ? PICK_LABEL[v] : "아직") + '</span></span>';
+    });
+    h += '</div>';
+    return h;
+  }
+
+  /* --- 번들 뷰 --- */
+  var bundlesEl = document.getElementById("bundles");
+  function renderBundles(){
+    var h = "";
+    BUNDLES.forEach(function(b){
+      var items = b.members.map(function(n){ return byName[n]; }).filter(Boolean)
+                   .sort(function(a,z){ return a.end - z.end; });
+
+      h += '<div class="bundle">';
+      h += '<div class="bundle-top"><span class="bundle-key">' + esc(b.key) + '</span>' +
+           '<h3>' + esc(b.title) + '</h3>' +
+           '<span class="bundle-yield">' + esc(b.yield) + '</span></div>';
+      h += '<p class="bundle-what">' + b.what + '</p>';
+      if(b.warn) h += '<p class="bundle-warn">' + b.warn + '</p>';
+
+      if(b.reuse !== "blocked"){
+        var soon = items.filter(function(c){ var n = days(c.end); return n >= 0; })
+                        .map(function(c){ return days(c.end); });
+        if(soon.length) h += '<p class="bundle-pot">가장 빠른 마감 D-' + Math.min.apply(null, soon) + ' · 총 ' + items.length + '건</p>';
+      }
+
+      if(b.reuse !== "blocked"){
+        var mk = "bundle_" + b.key;
+        var mm = getMemo(mk);
+        h += '<div class="memo"><textarea data-memokey="' + mk + '" rows="1" placeholder="이 묶음으로 밀 아이템 한 줄 —  예) 포항 어르신 대상 AI 행정 도우미">' +
+             esc(mm ? mm.text : "") + '</textarea>' +
+             '<span class="memo-by">' + (mm ? esc(personName(mm.by)) : "") + '</span></div>';
+      }
+
+      h += '<div class="bundle-list">';
+      items.forEach(function(c){
+        var dd = ddayOf(c);
+        h += '<div class="brow">';
+        h += '<span class="brow-d ' + dd.cls + '" style="color:var(--' +
+             (dd.cls === "u-hot" ? "u-hot" : dd.cls === "u-warm" ? "u-warm" : dd.cls === "u-gone" ? "u-gone" : dd.cls === "u-roll" ? "accent" : "u-ok") + ')">' + dd.txt + '</span>';
+        h += '<span class="brow-name"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
+             '<span class="sub">' + esc(c.prize) + '</span></span>';
+        h += (b.reuse === "blocked") ? '<span class="peer"><span class="v">지원 불가</span></span>' : picksHTML(c.name);
+        h += '</div>';
+      });
+      h += '</div></div>';
+    });
+    bundlesEl.innerHTML = h;
+  }
+
+  /* --- 금요일 뷰 --- */
+  var fridayEl = document.getElementById("friday");
+  function renderFriday(){
+    var open = C.filter(function(c){ return c.rolling || days(c.end) >= 0; });
+    var blocked = {};
+    BUNDLES.forEach(function(b){ if(b.reuse === "blocked") b.members.forEach(function(n){ blocked[n] = 1; }); });
+    open = open.filter(function(c){ return !blocked[c.name]; });
+
+    var agree = [], split = [], half = [], none = [];
+    open.forEach(function(c){
+      var vs = PEOPLE.map(function(p){ return getPick(c.name, p.id); });
+      var picked = vs.filter(Boolean);
+      if(picked.length === 0){ none.push(c); return; }
+      if(picked.length < PEOPLE.length){ half.push(c); return; }
+      var allYes = vs.every(function(v){ return v === "yes"; });
+      var allSame = vs.every(function(v){ return v === vs[0]; });
+      if(allYes) agree.push(c);
+      else if(allSame) return;              // 둘 다 패스/고민으로 일치 → 굳이 안 띄운다
+      else split.push(c);
+    });
+
+    function sortD(a,z){ return a.end - z.end; }
+    [agree,split,half,none].forEach(function(a){ a.sort(sortD); });
+
+    var urgentNone = none.filter(function(c){ return !c.rolling && days(c.end) <= 14; });
+
+    function block(color, title, note, list, showPicks){
+      var h = '<div class="fri-group"><div class="fri-head">' +
+              '<span class="dot2" style="background:' + color + '"></span>' +
+              '<h3>' + esc(title) + '</h3><span class="n">' + list.length + '건</span></div>';
+      h += '<p class="fri-note">' + note + '</p>';
+      if(!list.length){ h += '<p class="fri-empty">해당 없음</p></div>'; return h; }
+      list.forEach(function(c){
+        var dd = ddayOf(c);
+        h += '<div class="fri-item">';
+        h += '<span class="brow-d" style="color:var(--' +
+             (dd.cls === "u-hot" ? "u-hot" : dd.cls === "u-warm" ? "u-warm" : dd.cls === "u-gone" ? "u-gone" : dd.cls === "u-roll" ? "accent" : "u-ok") + ')">' + dd.txt + '</span>';
+        h += '<span class="brow-name"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
+             '<span class="sub">' + esc(c.prize) + '</span></span>';
+        h += showPicks ? picksHTML(c.name) : '<span></span>';
+        var bd = bundleOf[c.name];
+        var mm = bd ? getMemo("bundle_" + bd.key) : null;
+        if(mm && mm.text){
+          h += '<span class="memo-line"><b>' + esc(bd.key) + '</b> ' + esc(mm.text) +
+               ' <span style="color:var(--ink-3)">— ' + esc(personName(mm.by)) + '</span></span>';
+        }
+        h += '</div>';
+      });
+      return h + '</div>';
+    }
+
+    var h = "";
+    h += block("var(--u-ok)",  "둘 다 하자 — 확정",
+          "이견 없습니다. 회의에서 시간 쓸 필요 없이 바로 역할만 나누면 됩니다.", agree, true);
+    h += block("var(--u-hot)", "갈렸음 — 여기부터 이야기",
+          "한 명은 하자고 하고 다른 한 명은 아닙니다. <b>회의의 본체입니다.</b>", split, true);
+    h += block("var(--u-warm)","한 명만 봤음",
+          "나머지 한 명이 아직 의견을 안 냈습니다. 금요일 전에 훑어두면 회의가 짧아집니다.", half, true);
+    h += block("var(--ink-3)", "아직 아무도 안 봄",
+          urgentNone.length
+            ? "이 중 <b>" + urgentNone.length + "건은 2주 안에 마감</b>됩니다. 위쪽부터 보세요."
+            : "급한 건 없습니다. 시간 나면 훑어보세요.", none, true);
+    fridayEl.innerHTML = h;
+
+    var badge = document.querySelector('#tabs [data-view="friday"] .badge');
+    if(badge){
+      if(split.length){ badge.textContent = split.length; badge.hidden = false; }
+      else badge.hidden = true;
+    }
+  }
+
+  function rerender(){ renderBundles(); renderFriday(); }
+
+  /* --- 이벤트 위임: 픽 버튼 --- */
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest(".pickset button");
+    if(!btn) return;
+    var set = btn.closest(".pickset");
+    setPick(set.getAttribute("data-name"), btn.getAttribute("data-v"));
+  });
+
+  /* --- 메모: 입력 멈추면 저장 --- */
+  var memoTimer = null;
+  document.addEventListener("input", function(e){
+    var ta = e.target;
+    if(!ta.matches || !ta.matches("textarea[data-memokey]")) return;
+    if(!ME){ setSync("off","먼저 '나는' 을 골라주세요"); return; }
+    clearTimeout(memoTimer);
+    var key = ta.getAttribute("data-memokey"), val = ta.value.trim();
+    memoTimer = setTimeout(function(){ setMemo(key, val); }, 600);
+  });
+
+  /* --- 나는 누구 --- */
+  var whoEl = document.getElementById("who");
+  function renderWho(){
+    whoEl.innerHTML = PEOPLE.map(function(p){
+      return '<button type="button" data-p="' + p.id + '" aria-pressed="' + (ME===p.id?"true":"false") + '">' + esc(p.name) + '</button>';
+    }).join("");
+  }
+  whoEl.addEventListener("click", function(e){
+    var b = e.target.closest("button[data-p]");
+    if(!b) return;
+    ME = b.getAttribute("data-p");
+    try{ localStorage.setItem("hgu.me", ME); }catch(err){}
+    renderWho(); rerender();
+  });
+  try{ ME = localStorage.getItem("hgu.me"); }catch(err){}
+
+  /* --- 탭 --- */
+  var VIEWS = [
+    { id:"bundle",   label:"아이템 번들" },
+    { id:"friday",   label:"금요일 회의", badge:true },
+    { id:"deadline", label:"전체 · 마감순" }
+  ];
+  var tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = VIEWS.map(function(v,i){
+    return '<button type="button" role="tab" data-view="' + v.id + '" aria-selected="' + (i===0?"true":"false") + '">' +
+           esc(v.label) + (v.badge ? '<span class="badge" hidden></span>' : '') + '</button>';
+  }).join("");
+  tabsEl.addEventListener("click", function(e){
+    var b = e.target.closest("button[data-view]");
+    if(!b) return;
+    var v = b.getAttribute("data-view");
+    Array.prototype.forEach.call(tabsEl.querySelectorAll("button"), function(x){
+      x.setAttribute("aria-selected", x === b ? "true" : "false");
+    });
+    VIEWS.forEach(function(x){ document.getElementById("view-" + x.id).hidden = (x.id !== v); });
+    document.getElementById("past").hidden = (v !== "deadline");
+  });
+  document.getElementById("past").hidden = true;
+
+  /* --- 시작 --- */
+  loadLocal();
+  renderWho();
+  rerender();
+  connect();
 })();
 </script>
