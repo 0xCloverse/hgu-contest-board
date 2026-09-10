@@ -1,495 +1,266 @@
-<title>공모전 마감 보드</title>
+<title>공모전 보드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
   :root{
-    --paper:#EFF1F4;
-    --surface:#FAFBFC;
-    --surface-2:#E7EBF0;
-    --ink:#15181D;
-    --ink-2:#454D57;
-    --ink-3:#79828D;
-    --rule:#D5DAE1;
-    --rule-soft:#E3E7EC;
-    --accent:#1D3F72;
-    --accent-soft:#DEE6F2;
-    --on-accent:#FAFBFC;
-    --today:#C0562A;
-    --u-hot:#AE2419;
-    --u-hot-bg:#F7E2E0;
-    --u-warm:#83530A;
-    --u-warm-bg:#F6EBD6;
-    --u-ok:#33604A;
-    --u-ok-bg:#E1EBE4;
-    --u-gone:#7A828C;
-    --u-gone-bg:#E5E8EC;
-    --flag:#6E3A86;
-    --flag-bg:#EEE5F4;
+    --bg:#FAFAF9;
+    --card:#FFFFFF;
+    --ink:#1A1C1B;
+    --ink-2:#4E5453;
+    --ink-3:#868C8B;
+    --rule:#E2E5E3;
+    --rule-2:#EFF1EF;
+    --accent:#2F6F5E;
+    --tae:#2B5CA8;      --tae-bg:#E7EEF8;
+    --jian:#A85B22;     --jian-bg:#F8EEE4;
+    --both:#1E7A55;     --both-bg:#E2F1EA;
+    --warn:#9A3B2F;
+    --hot:#B3352A;
+    --on-solid:#FFFFFF;
   }
-  @media (prefers-color-scheme: dark){
+  @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
-      --paper:#0F1216;
-      --surface:#171B21;
-      --surface-2:#1F242B;
-      --ink:#E7EBF0;
-      --ink-2:#A9B3BE;
-      --ink-3:#79838F;
-      --rule:#2B323B;
-      --rule-soft:#232931;
-      --accent:#8CB2E8;
-      --accent-soft:#1C2836;
-      --on-accent:#0F1216;
-      --today:#E28D5F;
-      --u-hot:#F09189;
-      --u-hot-bg:#33201E;
-      --u-warm:#DFB161;
-      --u-warm-bg:#2E2618;
-      --u-ok:#8FC3A6;
-      --u-ok-bg:#1B2820;
-      --u-gone:#7E8790;
-      --u-gone-bg:#22272D;
-      --flag:#C79BDC;
-      --flag-bg:#2A2032;
+      --bg:#111413; --card:#191D1C; --ink:#E9EDEB; --ink-2:#A9B1AF; --ink-3:#7B8382;
+      --rule:#2A302E; --rule-2:#222826; --accent:#7FC3AC;
+      --tae:#8FB6EC;  --tae-bg:#1A2634;
+      --jian:#E0A06A; --jian-bg:#2E2318;
+      --both:#77CCA5; --both-bg:#152A22;
+      --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
     }
   }
   :root[data-theme="dark"]{
-    --paper:#0F1216; --surface:#171B21; --surface-2:#1F242B;
-    --ink:#E7EBF0; --ink-2:#A9B3BE; --ink-3:#79838F;
-    --rule:#2B323B; --rule-soft:#232931;
-    --accent:#8CB2E8; --accent-soft:#1C2836; --on-accent:#0F1216; --today:#E28D5F;
-    --u-hot:#F09189; --u-hot-bg:#33201E;
-    --u-warm:#DFB161; --u-warm-bg:#2E2618;
-    --u-ok:#8FC3A6; --u-ok-bg:#1B2820;
-    --u-gone:#7E8790; --u-gone-bg:#22272D;
-    --flag:#C79BDC; --flag-bg:#2A2032;
+    --bg:#111413; --card:#191D1C; --ink:#E9EDEB; --ink-2:#A9B1AF; --ink-3:#7B8382;
+    --rule:#2A302E; --rule-2:#222826; --accent:#7FC3AC;
+    --tae:#8FB6EC;  --tae-bg:#1A2634;
+    --jian:#E0A06A; --jian-bg:#2E2318;
+    --both:#77CCA5; --both-bg:#152A22;
+    --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
   }
 
   *{box-sizing:border-box}
   body{
-    background:var(--paper);
-    color:var(--ink);
+    background:var(--bg);color:var(--ink);
     font-family:"IBM Plex Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;
-    font-size:15px;
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
+    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1060px;margin:0 auto;padding:0 20px 96px}
+  .wrap{max-width:840px;margin:0 auto;padding:0 20px 90px}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
 
-  /* ---------- masthead ---------- */
-  header.mast{padding:52px 0 28px}
-  .kicker{
-    font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
-    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  /* ---- header ---- */
+  header{padding:44px 0 0}
+  h1{font-size:29px;font-weight:700;letter-spacing:-.02em;margin:0}
+  .sub{color:var(--ink-3);font-size:13.5px;margin:6px 0 0}
+  .statusline{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-top:16px;font-size:12px;color:var(--ink-3);
   }
-  .kicker span.dot{width:4px;height:4px;border-radius:50%;background:var(--today)}
-  h1{
-    font-family:Hahmlet,"Apple SD Gothic Neo",serif;font-weight:700;
-    font-size:clamp(34px,5.4vw,52px);line-height:1.12;letter-spacing:-.015em;
-    margin:14px 0 0;text-wrap:balance;
-  }
-  .standfirst{
-    max-width:60ch;color:var(--ink-2);margin:14px 0 0;font-size:16px;
-  }
-  .standfirst b{color:var(--ink);font-weight:600}
+  .statusline .mono{color:var(--ink-2);font-weight:500}
+  .led{display:inline-flex;align-items:center;gap:6px}
+  .led i{width:7px;height:7px;border-radius:50%;background:var(--ink-3);display:block}
+  .led[data-s="live"] i{background:var(--both)} .led[data-s="live"]{color:var(--both)}
+  .led[data-s="off"]  i{background:var(--warn)} .led[data-s="off"]{color:var(--warn)}
 
-  .meta{
-    margin-top:26px;display:flex;flex-wrap:wrap;gap:10px 26px;
-    padding-top:18px;border-top:1px solid var(--rule);
-    font-size:13px;color:var(--ink-3);
-  }
-  .meta b{
-    font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink-2);
-    font-variant-numeric:tabular-nums;
-  }
-
-  /* ---------- filter bar ---------- */
-  .filterbar{
-    position:sticky;top:0;z-index:20;background:var(--paper);
-    padding:14px 0 12px;margin-bottom:8px;
-    border-bottom:1px solid var(--rule);
-    display:flex;gap:8px;flex-wrap:wrap;align-items:center;
-  }
-  .chip{
-    font:500 13px/1 "IBM Plex Sans KR",sans-serif;
-    padding:8px 13px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--rule);background:var(--surface);color:var(--ink-2);
-    transition:background .12s,border-color .12s,color .12s;
-  }
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip[aria-pressed="true"]{
-    background:var(--accent);border-color:var(--accent);
-    color:var(--on-accent);font-weight:600;
-  }
-  .chip .n{
-    font-family:"IBM Plex Mono",monospace;font-size:11px;opacity:.65;margin-left:5px;
-    font-variant-numeric:tabular-nums;
-  }
-  .chip:focus-visible,a:focus-visible{outline:2px solid var(--today);outline-offset:2px}
-
-  /* ---------- sections ---------- */
-  section{margin-top:38px}
-  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:2px}
-  .sec-head h2{
-    font-family:Hahmlet,serif;font-weight:700;font-size:21px;letter-spacing:-.01em;margin:0;
-  }
-  .sec-head .count{
-    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);
-    font-variant-numeric:tabular-nums;
-  }
-  .sec-note{color:var(--ink-3);font-size:13.5px;margin:2px 0 14px;max-width:62ch}
-
-  /* ---------- entry ---------- */
-  .entry{
-    display:grid;grid-template-columns:82px 1fr;gap:0 22px;
-    padding:20px 0;border-top:1px solid var(--rule-soft);
-  }
-  .entry:first-of-type{border-top:1px solid var(--rule)}
-
-  .dday{
-    font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
-    text-align:right;padding-top:2px;
-  }
-  .dday .d{font-size:25px;font-weight:600;line-height:1.05;letter-spacing:-.03em;display:block}
-  .dday .until{font-size:11px;color:var(--ink-3);display:block;margin-top:3px}
-  .u-hot .d{color:var(--u-hot)}
-  .u-warm .d{color:var(--u-warm)}
-  .u-ok .d{color:var(--u-ok)}
-  .u-gone .d{color:var(--u-gone);font-size:19px}
-  .u-roll .d{color:var(--accent);font-size:19px}
-
-  .body h3{
-    font-size:17px;font-weight:600;margin:0;letter-spacing:-.005em;line-height:1.35;
-  }
-  .body h3 a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--accent-soft)}
-  .body h3 a:hover{border-bottom-color:var(--accent);color:var(--accent)}
-  .org{font-size:13px;color:var(--ink-3);margin-top:3px}
-
-  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-  .tag{
-    font:500 11px/1 "IBM Plex Sans KR",sans-serif;padding:5px 8px;border-radius:4px;
-    background:var(--surface-2);color:var(--ink-2);
-  }
-  .tag.web3{background:var(--accent-soft);color:var(--accent)}
-  .tag.warn{background:var(--flag-bg);color:var(--flag);font-weight:600}
-
-  dl.facts{
-    display:grid;grid-template-columns:auto 1fr;gap:5px 14px;
-    margin:12px 0 0;font-size:13.5px;
-  }
-  dl.facts dt{
-    color:var(--ink-3);font-size:11.5px;font-weight:500;letter-spacing:.05em;
-    padding-top:3px;white-space:nowrap;
-  }
-  dl.facts dd{margin:0;color:var(--ink-2)}
-  dl.facts dd b{color:var(--ink);font-weight:600}
-  dl.facts dd .won{
-    font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-weight:600;
-  }
-
-  /* ---------- application window bar ---------- */
-  .win{margin-top:13px;max-width:520px}
-  .win-track{
-    position:relative;height:5px;border-radius:3px;background:var(--surface-2);
-    overflow:visible;
-  }
-  .win-fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--rule)}
-  .win-now{
-    position:absolute;top:-4px;width:2px;height:13px;background:var(--today);border-radius:1px;
-  }
-  .win-labels{
-    display:flex;justify-content:space-between;margin-top:5px;
-    font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);
-    font-variant-numeric:tabular-nums;
-  }
-
-  .note{
-    margin-top:11px;font-size:13px;color:var(--ink-2);
-    border-left:2px solid var(--accent);padding-left:11px;
-  }
-  .note.caution{border-left-color:var(--flag);color:var(--flag)}
-
-  .link{
-    display:inline-block;margin-top:11px;font-size:12.5px;font-weight:500;
-    color:var(--accent);text-decoration:none;
-    font-family:"IBM Plex Mono",monospace;
-  }
-  .link:hover{text-decoration:underline}
-  .link::after{content:" ↗";font-size:11px}
-
-  /* ---------- closed table ---------- */
-  .past-wrap{overflow-x:auto;margin-top:14px}
-  table.past{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px}
-  table.past th{
-    text-align:left;font-weight:600;font-size:11.5px;letter-spacing:.06em;
-    color:var(--ink-3);padding:0 14px 8px 0;border-bottom:1px solid var(--rule);
-    white-space:nowrap;
-  }
-  table.past td{
-    padding:9px 14px 9px 0;border-bottom:1px solid var(--rule-soft);
-    color:var(--ink-2);vertical-align:top;
-  }
-  table.past td:first-child{color:var(--ink);font-weight:500}
-  table.past td.when{
-    font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
-    white-space:nowrap;color:var(--ink-3);
-  }
-
-  footer{
-    margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);
-    font-size:12.5px;color:var(--ink-3);max-width:66ch;
-  }
-
-  .empty{padding:28px 0;color:var(--ink-3);font-size:14px}
-
-  @media (max-width:620px){
-    .entry{grid-template-columns:1fr;gap:0}
-    .dday{text-align:left;display:flex;align-items:baseline;gap:8px;margin-bottom:8px;padding-top:0}
-    .dday .until{margin-top:0}
-    .dday .d{font-size:21px}
-    dl.facts{grid-template-columns:1fr;gap:1px 0}
-    dl.facts dt{padding-top:7px}
-    .filterbar{gap:6px}
-  }
-  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-
-  /* ================= 협업 레이어 ================= */
-
-  /* --- 상단 신원/동기화 바 --- */
-  .crew{
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-    margin-top:20px;padding:12px 14px;border-radius:8px;
-    background:var(--surface);border:1px solid var(--rule);
-  }
-  .crew-label{font-size:12px;color:var(--ink-3);font-weight:500;white-space:nowrap}
-  .who{display:flex;gap:6px}
-  .who button{
-    font:600 13px/1 "IBM Plex Sans KR",sans-serif;padding:8px 14px;border-radius:6px;
-    border:1px solid var(--rule);background:var(--paper);color:var(--ink-2);cursor:pointer;
-  }
-  .who button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-  .who button:hover{border-color:var(--accent)}
-  .sync{
-    margin-left:auto;display:flex;align-items:center;gap:7px;
-    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);white-space:nowrap;
-  }
-  .sync .led{width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex:none}
-  .sync[data-state="live"] .led{background:var(--u-ok)}
-  .sync[data-state="live"]{color:var(--u-ok)}
-  .sync[data-state="off"] .led{background:var(--u-warm)}
-  .sync[data-state="off"]{color:var(--u-warm)}
-
-  /* --- 탭 --- */
+  /* ---- tabs ---- */
   .tabs{
-    position:sticky;top:0;z-index:30;background:var(--paper);
-    display:flex;gap:2px;padding:14px 0 0;margin-top:24px;
-    border-bottom:1px solid var(--rule);
+    display:flex;gap:24px;margin-top:26px;
+    border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--bg);z-index:20;
   }
   .tabs button{
-    font:600 14px/1 "IBM Plex Sans KR",sans-serif;padding:11px 16px;cursor:pointer;
-    border:none;background:none;color:var(--ink-3);
+    background:none;border:none;padding:12px 0;cursor:pointer;
+    font:600 15px/1 "IBM Plex Sans KR",sans-serif;color:var(--ink-3);
     border-bottom:2px solid transparent;margin-bottom:-1px;
   }
   .tabs button:hover{color:var(--ink)}
-  .tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-  .tabs .badge{
-    font-family:"IBM Plex Mono",monospace;font-size:10px;margin-left:6px;
-    background:var(--u-hot);color:var(--paper);border-radius:8px;padding:2px 6px;
-    font-variant-numeric:tabular-nums;
-  }
-  :root[data-theme="dark"] .tabs .badge{color:#0F1216}
+  .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+  .tabs .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);margin-left:6px}
 
-  /* --- 번들 카드 --- */
-  .bundle{
-    border:1px solid var(--rule);border-radius:10px;background:var(--surface);
-    padding:20px;margin-top:16px;
+  /* ---- topic section ---- */
+  .topic{margin-top:38px}
+  .topic-h{
+    display:flex;align-items:baseline;gap:10px;
+    padding-bottom:8px;border-bottom:1px solid var(--rule);
   }
-  .bundle-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .bundle-key{
-    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px;
-    background:var(--accent);color:var(--on-accent);border-radius:4px;padding:3px 7px;flex:none;
-  }
-  .bundle-top h3{font-family:Hahmlet,serif;font-weight:700;font-size:19px;margin:0;letter-spacing:-.01em}
-  .bundle-yield{
-    margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;
-    color:var(--accent);font-weight:600;white-space:nowrap;
-  }
-  .bundle-what{
-    margin:11px 0 0;font-size:13.5px;color:var(--ink-2);
-    border-left:2px solid var(--accent);padding-left:11px;
-  }
-  .bundle-what b{color:var(--ink)}
-  .bundle-warn{
-    margin:9px 0 0;font-size:12.5px;color:var(--flag);
-    border-left:2px solid var(--flag);padding-left:11px;
-  }
-  .bundle-pot{
-    margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;
-    color:var(--ink-3);font-variant-numeric:tabular-nums;
-  }
-  .bundle-list{margin-top:14px;border-top:1px solid var(--rule-soft)}
+  .topic-h h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .topic-h .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
 
-  /* --- 번들 안 공모전 줄 --- */
-  .brow{
-    display:grid;grid-template-columns:56px 1fr auto;gap:0 14px;align-items:center;
-    padding:12px 0;border-bottom:1px solid var(--rule-soft);
-  }
-  .brow:last-child{border-bottom:none}
-  .brow-d{
-    font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
-    font-size:15px;font-weight:600;text-align:right;
-  }
-  .brow-name{font-size:14px;line-height:1.4}
-  .brow-name a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent-soft)}
-  .brow-name a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .brow-name .sub{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+  /* ---- competition ---- */
+  .c{padding:20px 0;border-bottom:1px solid var(--rule-2)}
+  .c-head{display:grid;grid-template-columns:54px 1fr auto;gap:0 14px;align-items:start}
+  .c-d{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+       font-size:16px;font-weight:600;text-align:right;padding-top:1px}
+  .c-d.hot{color:var(--hot)}
+  .c-d small{display:block;font-size:10.5px;font-weight:500;color:var(--ink-3);margin-top:2px}
+  .c-title{font-size:16px;font-weight:600;line-height:1.4;margin:0}
+  .c-title a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+  .c-title a:hover{border-bottom-color:var(--ink-3)}
+  .c-org{font-size:12.5px;color:var(--ink-3);margin:2px 0 0}
 
-  /* --- 픽 컨트롤 --- */
-  .picks{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-  .pickset{display:flex;gap:3px}
-  .pickset button{
-    font:500 11.5px/1 "IBM Plex Sans KR",sans-serif;padding:6px 9px;cursor:pointer;
-    border:1px solid var(--rule);background:var(--paper);color:var(--ink-3);
+  /* ---- pick ---- */
+  .pickwrap{position:relative}
+  .pickbtn{
+    font:500 12.5px/1 "IBM Plex Sans KR",sans-serif;padding:7px 12px;border-radius:6px;
+    border:1px solid var(--rule);background:var(--card);color:var(--ink-2);cursor:pointer;white-space:nowrap;
   }
-  .pickset button:first-child{border-radius:5px 0 0 5px}
-  .pickset button:last-child{border-radius:0 5px 5px 0}
-  .pickset button:hover{border-color:var(--ink-3);color:var(--ink)}
-  .pickset button[aria-pressed="true"][data-v="yes"]{background:var(--u-ok-bg);border-color:var(--u-ok);color:var(--u-ok);font-weight:600}
-  .pickset button[aria-pressed="true"][data-v="maybe"]{background:var(--u-warm-bg);border-color:var(--u-warm);color:var(--u-warm);font-weight:600}
-  .pickset button[aria-pressed="true"][data-v="no"]{background:var(--u-gone-bg);border-color:var(--ink-3);color:var(--ink-2);font-weight:600}
-  .peer{
-    font-size:11.5px;color:var(--ink-3);white-space:nowrap;
-    display:inline-flex;align-items:center;gap:5px;
+  .pickbtn:hover{border-color:var(--ink-3);color:var(--ink)}
+  .pickbtn[data-has="1"]{border-style:solid}
+  .pop{
+    position:absolute;right:0;top:calc(100% + 6px);z-index:40;
+    background:var(--card);border:1px solid var(--rule);border-radius:8px;
+    box-shadow:0 6px 20px rgba(0,0,0,.13);padding:5px;min-width:132px;
   }
-  .peer .v{font-weight:600;padding:3px 7px;border-radius:4px;background:var(--surface-2);color:var(--ink-3)}
-  .peer .v[data-v="yes"]{background:var(--u-ok-bg);color:var(--u-ok)}
-  .peer .v[data-v="maybe"]{background:var(--u-warm-bg);color:var(--u-warm)}
-  .peer .v[data-v="no"]{background:var(--u-gone-bg);color:var(--ink-2)}
+  .pop button{
+    display:flex;align-items:center;gap:9px;width:100%;
+    font:500 13.5px/1 "IBM Plex Sans KR",sans-serif;padding:9px 10px;border-radius:5px;
+    border:none;background:none;color:var(--ink);cursor:pointer;text-align:left;
+  }
+  .pop button:hover{background:var(--rule-2)}
+  .pop .box{
+    width:15px;height:15px;border-radius:4px;border:1.5px solid var(--rule);flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--on-solid);
+  }
+  .pop button[aria-pressed="true"][data-p="tae"]  .box{background:var(--tae);border-color:var(--tae)}
+  .pop button[aria-pressed="true"][data-p="jian"] .box{background:var(--jian);border-color:var(--jian)}
 
-  /* --- 메모 --- */
-  .memo{margin-top:12px;display:flex;gap:8px;align-items:flex-start}
-  .memo textarea{
-    flex:1;font:400 13.5px/1.55 "IBM Plex Sans KR",sans-serif;color:var(--ink);
-    background:var(--paper);border:1px solid var(--rule);border-radius:6px;
-    padding:9px 11px;resize:vertical;min-height:40px;
+  /* ---- who badges ---- */
+  .who{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+  .tag{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+    padding:3px 8px;border-radius:4px;letter-spacing:.02em;
   }
-  .memo textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
-  .memo textarea::placeholder{color:var(--ink-3)}
-  .memo-by{
-    font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);
-    white-space:nowrap;padding-top:12px;
-  }
+  .tag[data-w="tae"] {background:var(--tae-bg); color:var(--tae)}
+  .tag[data-w="jian"]{background:var(--jian-bg);color:var(--jian)}
+  .tag[data-w="both"]{background:var(--both-bg);color:var(--both)}
 
-  /* --- 금요일 뷰 --- */
-  .fri-group{margin-top:26px}
-  .fri-head{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
-  .fri-head h3{font-family:Hahmlet,serif;font-weight:700;font-size:18px;margin:0}
-  .fri-head .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
-  .fri-head .dot2{width:8px;height:8px;border-radius:50%;flex:none}
-  .fri-note{font-size:13px;color:var(--ink-3);margin:0 0 10px;max-width:62ch}
-  .fri-item{
-    display:grid;grid-template-columns:56px 1fr auto;gap:0 14px;align-items:center;
-    padding:11px 0;border-top:1px solid var(--rule-soft);
+  /* ---- details ---- */
+  .c-body{margin-left:68px;margin-top:12px}
+  @media (max-width:600px){ .c-body{margin-left:0} }
+  dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:13.5px}
+  dt{color:var(--ink-3);font-size:11.5px;font-weight:500;white-space:nowrap;padding-top:3px}
+  dd{margin:0;color:var(--ink-2)}
+  dd b{color:var(--ink);font-weight:600}
+  dd.mono{font-weight:500;color:var(--ink)}
+  .p-note{font-size:13px;color:var(--ink-2);margin:11px 0 0;padding-left:11px;border-left:2px solid var(--rule)}
+  .p-warn{font-size:13px;color:var(--warn);margin:8px 0 0;padding-left:11px;border-left:2px solid var(--warn)}
+  .go{
+    display:inline-block;margin-top:11px;font-family:"IBM Plex Mono",monospace;
+    font-size:12px;color:var(--accent);text-decoration:none;
   }
-  .fri-item .memo-line{
-    grid-column:2/-1;font-size:12.5px;color:var(--ink-2);margin-top:5px;
-    border-left:2px solid var(--rule);padding-left:9px;
-  }
-  .fri-empty{font-size:13px;color:var(--ink-3);padding:10px 0}
+  .go:hover{text-decoration:underline}
 
-  @media (max-width:620px){
-    .brow,.fri-item{grid-template-columns:48px 1fr;gap:6px 10px}
-    .picks{grid-column:1/-1;justify-content:flex-start}
-    .bundle{padding:16px}
-    .bundle-yield{margin-left:0;width:100%}
-    .tabs{overflow-x:auto}
-    .tabs button{white-space:nowrap;padding:11px 12px;font-size:13px}
-    .crew{gap:10px}
-    .sync{margin-left:0;width:100%}
+  /* ---- 선택 후보 ---- */
+  .person{margin-top:34px}
+  .person-h{display:flex;align-items:center;gap:10px;padding-bottom:9px;border-bottom:2px solid}
+  .person-h[data-p="tae"] {border-color:var(--tae)}
+  .person-h[data-p="jian"]{border-color:var(--jian)}
+  .person-h h2{font-size:18px;font-weight:700;margin:0}
+  .person-h[data-p="tae"]  h2{color:var(--tae)}
+  .person-h[data-p="jian"] h2{color:var(--jian)}
+  .person-h .n{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-3)}
+  .sub-topic{margin-top:16px}
+  .sub-topic h3{
+    font-size:11.5px;font-weight:600;color:var(--ink-3);margin:0 0 4px;
+    letter-spacing:.04em;
+  }
+  .pick-row{
+    display:grid;grid-template-columns:54px 1fr auto;gap:0 14px;align-items:center;
+    padding:9px 11px;border-radius:6px;margin-left:-11px;
+  }
+  .pick-row.both{background:var(--both-bg)}
+  .pick-row .c-d{font-size:14px}
+  .pick-row.both .c-d{color:var(--both)}
+  .pick-row a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
+  .pick-row.both a{color:var(--both);font-weight:600}
+  .pick-row a:hover{text-decoration:underline}
+  .pick-row .sub2{display:block;font-size:11.5px;color:var(--ink-3);font-weight:400;margin-top:1px}
+  .empty{color:var(--ink-3);font-size:13.5px;padding:16px 0}
+  .legend{
+    display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;
+    font-size:12px;color:var(--ink-3);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:11px;height:11px;border-radius:3px;display:block}
+
+  /* ---- past ---- */
+  details.past{margin-top:44px;border-top:1px solid var(--rule);padding-top:16px}
+  details.past summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+  details.past summary:hover{color:var(--ink)}
+  .past-wrap{overflow-x:auto;margin-top:14px}
+  table{border-collapse:collapse;width:100%;min-width:540px;font-size:13px}
+  th{text-align:left;font-size:11px;font-weight:600;color:var(--ink-3);
+     padding:0 12px 7px 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+  td{padding:8px 12px 8px 0;border-bottom:1px solid var(--rule-2);color:var(--ink-2);vertical-align:top}
+  td:first-child{color:var(--ink);font-weight:500}
+  td.w{font-family:"IBM Plex Mono",monospace;color:var(--ink-3);white-space:nowrap}
+
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
+         font-size:12px;color:var(--ink-3);max-width:64ch}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:600px){
+    .c-head,.pick-row{grid-template-columns:46px 1fr}
+    .pickwrap{grid-column:1/-1;margin-top:8px}
+    .pop{right:auto;left:0}
   }
 </style>
 
 <div class="wrap">
-  <header class="mast">
-    <p class="kicker">한동대 학부생 지원 가능 <span class="dot"></span> WEB3 · AI · 생성형 AI · 마케팅</p>
-    <h1>지금 넣을 수 있는 공모전·해커톤</h1>
-    <p class="standfirst">2026년 9월 기준 <b>접수가 열려 있는</b> 국내 공모전과 해커톤만 모았습니다. 학부 재학생이 개인 또는 팀으로 지원할 수 있는 건만 담았고, 지역·연령 같은 <b>자격 제한이 걸리는 건은 따로 표시</b>했습니다.</p>
-    <div class="meta">
-      <span>기준일 <b id="today-str">—</b></span>
-      <span>수록 <b id="n-open">—</b>건</span>
-      <span>2주 내 마감 <b id="n-hot">—</b>건</span>
-    </div>
-
-    <div class="crew">
-      <span class="crew-label">나는</span>
-      <div class="who" id="who"></div>
-      <div class="sync" id="sync" data-state="init"><span class="led"></span><span id="sync-txt">연결 중</span></div>
+  <header>
+    <h1>공모전 보드</h1>
+    <p class="sub">한동대 학부생 지원 가능 · Web3 / AI / 생성형 AI / 마케팅</p>
+    <div class="statusline">
+      <span>기준일 <b class="mono" id="today">—</b></span>
+      <span>접수중 <b class="mono" id="n-open">—</b>건</span>
+      <span class="led" id="led" data-s="init"><i></i><span id="led-t">연결 중</span></span>
     </div>
   </header>
 
   <nav class="tabs" id="tabs" role="tablist"></nav>
 
-  <section id="view-bundle" role="tabpanel">
-    <p class="sec-note" style="margin-top:18px">
-      제출물 한 벌로 여러 곳을 커버할 수 있게 묶었습니다.
-      <b>아이템이 그대로 재활용되는 묶음</b>과 <b>제작 방식만 재활용되는 묶음</b>은 성격이 다르니 구분해서 보세요.
-    </p>
-    <div id="bundles"></div>
+  <section id="v-all" role="tabpanel"></section>
+
+  <section id="v-pick" role="tabpanel" hidden>
+    <div class="legend">
+      <span><i style="background:var(--tae)"></i>태영</span>
+      <span><i style="background:var(--jian)"></i>지안</span>
+      <span><i style="background:var(--both)"></i>둘 다 선택</span>
+    </div>
+    <div id="picked"></div>
   </section>
 
-  <section id="view-deadline" role="tabpanel" hidden>
-    <nav class="filterbar" id="filters" aria-label="분야 필터"></nav>
-    <main id="board"></main>
-  </section>
-
-  <section id="view-friday" role="tabpanel" hidden>
-    <p class="sec-note" style="margin-top:18px">
-      두 사람 선택을 맞춰본 결과입니다. <b>갈린 것부터</b> 이야기하면 회의가 빨리 끝납니다.
-    </p>
-    <div id="friday"></div>
-  </section>
-
-  <section id="past">
-    <div class="sec-head"><h2>올해는 끝났지만, 내년에 노릴 것</h2></div>
-    <p class="sec-note">아래는 이미 마감됐지만 매년 같은 시기에 반복되는 대회입니다. 규모가 크거나 학부생에게 특히 유리한 것들이라, 접수 시기를 미리 잡아두면 좋습니다.</p>
+  <details class="past" id="past">
+    <summary>올해는 끝났지만 내년에 노릴 것</summary>
     <div class="past-wrap">
-      <table class="past">
-        <thead>
-          <tr><th>대회</th><th>주최</th><th>올해 접수 시기</th><th>규모 · 메모</th></tr>
-        </thead>
+      <table>
+        <thead><tr><th>대회</th><th>주최</th><th>접수 시기</th><th>규모 · 메모</th></tr></thead>
         <tbody id="past-body"></tbody>
       </table>
     </div>
-  </section>
+  </details>
 
-  <footer>
-    <p>D-day는 이 페이지를 열어 본 날짜 기준으로 다시 계산됩니다. 요강은 주최 측 사정으로 바뀔 수 있으니 <b>지원 전 반드시 공식 공고문을 확인</b>하세요. 특히 마감 시각(18:00 마감인 대회가 많습니다)과 제출 서식은 공고문 기준입니다.</p>
-  </footer>
+  <footer>D-day는 한국 시각 기준으로 자동 갱신됩니다. 요강은 바뀔 수 있으니 지원 전 공고문을 확인하세요.</footer>
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  /* "오늘"을 뷰어의 로컬 시간대와 무관하게 KST(UTC+9) 기준으로 고정.
-     모든 날짜는 Date.UTC로 만든 "순수 달력값"이라 브라우저 타임존 설정과 상관없이
-     자정을 넘기면 다음날 KST 기준으로 D-day가 갱신된다. */
-  function kstTodayParts(){
-    // Date.now()는 브라우저 시간대와 무관한 절대 UTC epoch ms이므로,
-    // 여기에 9시간만 더하면 그 값의 UTC 필드가 곧 KST 벽시계 날짜가 된다.
-    var kst = new Date(Date.now() + 9 * 60 * 60000);
-    return { y: kst.getUTCFullYear(), m: kst.getUTCMonth() + 1, d: kst.getUTCDate() };
+  /* ---------- KST 날짜 ---------- */
+  function kstParts(){
+    var k = new Date(Date.now() + 9*60*60000);
+    return { y:k.getUTCFullYear(), m:k.getUTCMonth()+1, d:k.getUTCDate() };
   }
-  var _kp = kstTodayParts();
-  var TODAY = new Date(Date.UTC(_kp.y, _kp.m - 1, _kp.d)); // KST 기준 오늘 00:00
-
+  var KP = kstParts();
+  var TODAY = new Date(Date.UTC(KP.y, KP.m-1, KP.d));
   var Y = 2026;
   function d(m, day, hh){
-    return new Date(Date.UTC(Y, m - 1, day, hh === undefined ? 23 : hh, hh === undefined ? 59 : 0, 0, 0));
+    return new Date(Date.UTC(Y, m-1, day, hh===undefined?23:hh, hh===undefined?59:0, 0, 0));
   }
-  function days(to){ var a = Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), to.getUTCDate()); return Math.round((a - TODAY)/86400000); }
-  function md(dt){ return (dt.getUTCMonth()+1) + "/" + dt.getUTCDate(); }
+  function days(to){
+    return Math.round((Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), to.getUTCDate()) - TODAY) / 86400000);
+  }
+  function md(x){ return (x.getUTCMonth()+1) + "/" + x.getUTCDate(); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
   var GROUPS = [
     { id:"web3",   label:"Web3 · 블록체인",
@@ -810,68 +581,6 @@
   }
   ];
 
-  /* ---------- 사람 ---------- */
-  var PEOPLE = [
-    { id:"tae",  name:"태영" },
-    { id:"jian", name:"지안" }
-  ];
-
-  /* ---------- 아이템 번들 ----------
-     같은 제출물 한 벌로 커버되는 묶음. reuse는 "무엇이 재활용되는가"를 구분한다.
-     - item : 아이디어 자체가 그대로 넘어감 (주제문이 사실상 동일)
-     - craft: 아이디어는 매번 새로 짜야 하고, 제작 방식·에셋만 재활용됨      */
-  var BUNDLES = [
-    {
-      key:"B", title:"지역·공공 AI 서비스", reuse:"item",
-      yield:"기획서 1벌 → 5곳",
-      what:"<b>아이템이 그대로 재활용됩니다.</b> 다섯 곳 주제문이 전부 \"AI로 공공·지역 문제를 푼다\"로 사실상 같고, 제출물도 기획서 PDF로 동일합니다. 대상 기관 이름과 데이터 출처만 갈아끼우면 됩니다.",
-      warn:"경북 AX가 9/15로 가장 빠릅니다. 여기 먼저 넣고 반응을 본 뒤 나머지에 다듬어 넣는 순서가 자연스럽습니다.",
-      members:["2026 경상북도 도민체감형 AX 경진대회","2026년 GovTech 창업 경진대회","2026 AI·디지털 기반 사회문제 해결 챌린지","2026년 창원시 AI·데이터 활용 공모전","2026 데이터+AI 혁신챌린지 : 데이터안심구역 경진대회"]
-    },
-    {
-      key:"F", title:"전통·지역문화 × 생성형 AI 영상", reuse:"item",
-      yield:"영상 컨셉 1개 → 3곳",
-      what:"<b>컨셉과 에셋이 둘 다 재활용됩니다.</b> 셋 다 \"전통·지역 소재를 생성형 AI로 재해석\"이라는 같은 요구입니다. 프롬프트와 생성 이미지를 상당 부분 공유할 수 있고, 길이·비율만 각 요강에 맞추면 됩니다.",
-      warn:"규격이 다릅니다. 문화데이터 10초~1분 / AI헤리티지 60초 이내 / 충북 3~5분. 가장 긴 충북용으로 만들어 두고 잘라 쓰는 편이 낫습니다.",
-      members:["[문화체육관광부×한국문화정보원] 문화데이터 활용 영상 제작 AI 챌린지","[2026 디지털헤리티지페스타] AI 헤리티지 공모전","2026 충북 AI광고제"]
-    },
-    {
-      key:"C", title:"금융 · 블록체인 서비스", reuse:"item",
-      yield:"서비스 기획 1벌 → 2곳",
-      what:"<b>아이템이 재활용됩니다.</b> 포용금융·블록체인 신원 인증이라는 축이 겹칩니다. 이 목록에서 <b>단일 상금이 가장 큰 조합</b>입니다(핀테크 대상 2,000만원).",
-      warn:"GWDC 해커톤(9/28~30)에서 만든 결과물을 그대로 이쪽으로 흘려보낼 수 있습니다. 핀테크 마감이 10/8이라 시간도 맞습니다.",
-      members:["(iM뱅크) 2026 AI Blockchain 경진대회","2026 제9회 핀테크 아이디어 공모전"]
-    },
-    {
-      key:"D", title:"창업 · 사업계획서", reuse:"item",
-      yield:"사업계획서 1벌 → 3곳",
-      what:"<b>같은 사업계획서를 양식만 바꿔 냅니다.</b> 문제정의·솔루션·시장·BM 구조가 공통이라, 한 번 제대로 쓰면 각 대회 서식에 맞춰 재구성하는 작업만 남습니다.",
-      warn:"로켓피치는 <b>타 대회 수상 이력이 있는 아이템 자체가 불가</b>합니다. 여기 낼 아이템은 다른 곳에서 먼저 수상하면 못 씁니다.",
-      members:["2026 전국 로켓피치 경진대회","2026 AI 창업 경진대회","제22회 한국능률협회컨설팅(KMAC) 경영혁신 대학(원)생 공모전"]
-    },
-    {
-      key:"A", title:"세로형 숏폼 AI 영상", reuse:"craft",
-      yield:"제작 파이프라인 1개 → 5곳",
-      what:"<b>아이디어는 재활용되지 않습니다.</b> 다섯 곳 모두 주제가 브랜드·기관으로 지정돼 있어 내용은 매번 새로 짜야 합니다. 대신 <b>툴 조합·프롬프트 세팅·편집 템플릿</b>이 그대로 넘어가서, 두 번째부터는 제작 시간이 크게 줄어듭니다.",
-      warn:"세븐일레븐은 <b>상업적 이용이 가능한 유료 플랜</b>으로 만든 영상만 인정합니다. 무료 요금제 결과물은 실격입니다. 농산물은 타 공모전 <b>기존 접수작</b>도 금지라 제일 빡빡합니다.",
-      members:["[세븐일레븐] K-비빔밥 AI 광고제 「ㄸ뚜ㅁ뜨뜨」","GS칼텍스 에너지플러스 앱 '바로주유' 영상 공모전","2026 우리 농산물 과채류 매력 알리기 콘텐츠 공모전","제44회 교통안전 홍보작품 공모전","2026년 국가정책연구포털(NKIS) AI 쇼츠 영상공모전"]
-    },
-    {
-      key:"—", title:"단독 — 묶이지 않는 것", reuse:"solo",
-      yield:"각각 따로",
-      what:"지정 데이터셋이나 현장 참석이 걸려 있어 다른 곳과 공유가 안 되는 건들입니다. <b>할 거면 그것만을 위해 시간을 따로 빼야 합니다.</b>",
-      warn:"",
-      members:["GWDC 2026 Korea 해커톤","2026 뉴스빅데이터 해커톤","제6회 K-인공지능(AI) 제조데이터 분석 경진대회","제3회 미래융합인재 발굴 소프트웨어 챌린지","2026 국방 AI 경진대회 (MAICON)","2026 해운·항만·물류 AX 혁신 아이디어 공모전","2026 AI·디지털 논문공모전","AI노출지수 & 카나리아 대시보드 네이밍 공모전","전국민 AI 활용사례 공모전 시즌3"]
-    },
-    {
-      key:"✕", title:"지원 자격 안 됨", reuse:"blocked",
-      yield:"검토 불필요",
-      what:"주제는 맞는데 <b>학적·주소지 조건에서 걸립니다.</b> 목록에서 지우지 않고 남겨둔 건, 나중에 \"이건 왜 없지?\" 하고 다시 찾아보는 일을 막기 위해서입니다.",
-      warn:"",
-      members:["2026년 전통시장 디지털 혁신 아이디어 공모전","2026년 서울 영테크 공모전"]
-    }
-  ];
-
   var PAST = [
     ["AI ROOKIE (인공지능 루키) 대회","과기정통부 · TTA","3/27 ~ 5/8","총 3.5억원 · 1위 5,000만원. 전공 무관 대학생 전용, 만 34세 이하 학사 미소지자. 학부생 대상 국내 최대 규모."],
     ["FIN:NECT 핀테크 챌린지","카카오뱅크 · 한국핀테크지원센터","4/13 ~ 5/25","총 2,600만원 + 우수 6팀 TechCrunch Disrupt(샌프란시스코) 참관. 금융/AI 2개 분야, 대학생·예비창업자 전용."],
@@ -885,533 +594,257 @@
     ["2026 코드게이트 AI 스타트업 해커톤","코드게이트","~7/8","총 2,500만원."]
   ];
 
-  /* ================= 공유 상태 (Firebase Realtime Database) =================
-     SDK를 싣지 않는다. 읽기는 EventSource(SSE), 쓰기는 fetch PUT.
-     Firebase RTDB REST가 text/event-stream을 그대로 지원해서 라이브러리가 필요 없다. */
+  var PEOPLE = [{ id:"tae", name:"태영" }, { id:"jian", name:"지안" }];
+  function pname(id){ return id==="tae" ? "태영" : "지안"; }
+
+  /* ---------- 공유 상태 ---------- */
   var DB   = "https://hgu-contest-default-rtdb.asia-southeast1.firebasedatabase.app";
-  var ROOT = "/board/v1";
+  var ROOT = "/v2";
+  var PICKS = {};                      // PICKS[cid] = {tae:true, jian:true}
+  var LKEY = "hgu.picks.v2";
 
-  var STATE = { picks:{}, memos:{} };   // picks[cid][personId] = "yes"|"maybe"|"no"
-  var ME = null;                        // 이 기기의 사용자 id
-  var LOCAL_KEY = "hgu.board.v1";       // Firebase가 죽었을 때의 대비책
+  function cid(name){ return name.replace(/[.$#\[\]\/\s]/g,"").slice(0,40); }
+  function loadLocal(){ try{ PICKS = JSON.parse(localStorage.getItem(LKEY)) || {}; }catch(e){ PICKS = {}; } }
+  function saveLocal(){ try{ localStorage.setItem(LKEY, JSON.stringify(PICKS)); }catch(e){} }
 
-  /* 공모전 이름 → Firebase 키. 한글은 키로 쓸 수 있고, 금지문자만 털어낸다. */
-  function cid(name){
-    return name.replace(/[.$#\[\]\/\s]/g, "").slice(0, 40);
-  }
+  var ledEl = document.getElementById("led"), ledT = document.getElementById("led-t");
+  function led(s, t){ ledEl.setAttribute("data-s", s); ledT.textContent = t; }
 
-  function loadLocal(){
-    try{
-      var raw = localStorage.getItem(LOCAL_KEY);
-      if(raw) STATE = JSON.parse(raw);
-    }catch(e){}
-    if(!STATE.picks) STATE.picks = {};
-    if(!STATE.memos) STATE.memos = {};
-  }
-  function saveLocal(){
-    try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(STATE)); }catch(e){}
-  }
-
-  var syncEl = document.getElementById("sync");
-  var syncTxt = document.getElementById("sync-txt");
-  function setSync(state, msg){
-    syncEl.setAttribute("data-state", state);
-    syncTxt.textContent = msg;
-  }
-
-  /* SSE 경로 문자열을 STATE에 반영. path는 "/", "/picks/xxx/tae" 같은 형태. */
   function applyAt(path, data, merge){
     if(path === "/" || path === ""){
-      if(!merge){
-        STATE = data || { picks:{}, memos:{} };
-        if(!STATE.picks) STATE.picks = {};
-        if(!STATE.memos) STATE.memos = {};
-      } else if(data){
-        Object.keys(data).forEach(function(k){ STATE[k] = data[k]; });
-      }
+      PICKS = (data && data.picks) || {};
       return;
     }
     var parts = path.split("/").filter(Boolean);
-    var last = parts.pop();
-    var node = STATE;
+    if(parts[0] !== "picks"){ return; }
+    parts.shift();
+    if(!parts.length){ PICKS = data || {}; return; }
+    var last = parts.pop(), node = PICKS;
     parts.forEach(function(p){
       if(typeof node[p] !== "object" || node[p] === null) node[p] = {};
       node = node[p];
     });
-    if(data === null){ delete node[last]; }
+    if(data === null) delete node[last];
     else if(merge && typeof data === "object" && data !== null){
       if(typeof node[last] !== "object" || node[last] === null) node[last] = {};
       Object.keys(data).forEach(function(k){
         if(data[k] === null) delete node[last][k]; else node[last][k] = data[k];
       });
-    } else { node[last] = data; }
+    } else node[last] = data;
   }
 
-  var esRef = null, sseFailures = 0;
+  var fails = 0;
   function connect(){
-    if(typeof EventSource === "undefined"){ setSync("off","이 브라우저는 실시간 미지원"); return; }
-    try{ esRef = new EventSource(DB + ROOT + ".json"); }
-    catch(e){ setSync("off","연결 실패 · 내 기기에만 저장"); return; }
-
-    function handle(merge){
+    if(typeof EventSource === "undefined"){ led("off","실시간 미지원"); return; }
+    var es;
+    try{ es = new EventSource(DB + ROOT + ".json"); }
+    catch(e){ led("off","연결 실패"); return; }
+    function h(merge){
       return function(ev){
-        var msg;
-        try{ msg = JSON.parse(ev.data); }catch(e){ return; }
-        if(!msg) return;
-        applyAt(msg.path, msg.data, merge);
-        if(!STATE.picks) STATE.picks = {};
-        if(!STATE.memos) STATE.memos = {};
-        saveLocal();
-        rerender();
-        sseFailures = 0;
-        setSync("live","실시간 연결됨");
+        var m; try{ m = JSON.parse(ev.data); }catch(e){ return; }
+        if(!m) return;
+        applyAt(m.path, m.data, merge);
+        saveLocal(); render();
+        fails = 0; led("live","실시간 연결됨");
       };
     }
-    esRef.addEventListener("put", handle(false));
-    esRef.addEventListener("patch", handle(true));
-    esRef.onopen = function(){ sseFailures = 0; setSync("live","실시간 연결됨"); };
-    esRef.onerror = function(){
-      sseFailures++;
-      // EventSource는 알아서 재접속한다. 계속 실패할 때만 사용자에게 알린다.
-      if(sseFailures >= 2) setSync("off","동기화 끊김 · 내 기기에만 저장");
-    };
+    es.addEventListener("put", h(false));
+    es.addEventListener("patch", h(true));
+    es.onopen  = function(){ fails = 0; led("live","실시간 연결됨"); };
+    es.onerror = function(){ if(++fails >= 2) led("off","동기화 끊김 · 이 기기에만 저장"); };
   }
 
-  /* 낙관적 쓰기: 화면을 먼저 바꾸고 서버에 보낸다. 실패해도 로컬 값은 유지. */
   function push(path, value){
     saveLocal();
     fetch(DB + ROOT + path + ".json", {
       method: value === null ? "DELETE" : "PUT",
-      headers: { "Content-Type":"application/json" },
+      headers: {"Content-Type":"application/json"},
       body: value === null ? undefined : JSON.stringify(value)
-    }).then(function(r){
-      if(!r.ok) throw new Error(r.status);
-    }).catch(function(){
-      setSync("off","저장 실패 · 내 기기에만 저장");
-    });
+    }).then(function(r){ if(!r.ok) throw 0; })
+      .catch(function(){ led("off","저장 실패 · 이 기기에만 저장"); });
   }
 
-  /* ---------- 픽 / 메모 ---------- */
-  function getPick(name, person){
-    var p = STATE.picks[cid(name)];
-    return p && p[person] ? p[person] : null;
-  }
-  function setPick(name, value){
-    if(!ME) { alert("먼저 위에서 '나는 태영 / 지안'을 골라주세요."); return; }
+  function picked(name, who){ var p = PICKS[cid(name)]; return !!(p && p[who]); }
+  function toggle(name, who){
     var k = cid(name);
-    if(!STATE.picks[k]) STATE.picks[k] = {};
-    if(STATE.picks[k][ME] === value){        // 같은 걸 다시 누르면 해제
-      delete STATE.picks[k][ME];
-      push("/picks/" + k + "/" + ME, null);
-    } else {
-      STATE.picks[k][ME] = value;
-      push("/picks/" + k + "/" + ME, value);
-    }
-    rerender();
-  }
-  function getMemo(key){ return STATE.memos[key] || null; }
-  function setMemo(key, text){
-    if(!ME) return;
-    if(!text){
-      delete STATE.memos[key];
-      push("/memos/" + key, null);
-    } else {
-      STATE.memos[key] = { text:text, by:ME, at:Date.now() };
-      push("/memos/" + key, STATE.memos[key]);
-    }
-  }
-  function personName(id){
-    for(var i=0;i<PEOPLE.length;i++) if(PEOPLE[i].id === id) return PEOPLE[i].name;
-    return id;
-  }
-  var PICK_LABEL = { yes:"하자", maybe:"고민", no:"패스" };
-
-  /* ---------- render ---------- */
-  function urgency(n, rolling){
-    if(rolling) return "u-roll";
-    if(n < 0)  return "u-gone";
-    if(n <= 7) return "u-hot";
-    if(n <= 21) return "u-warm";
-    return "u-ok";
-  }
-  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-  var board = document.getElementById("board");
-  var openCount = 0, hotCount = 0;
-
-  function renderBoard(){
-  board.innerHTML = ""; openCount = 0; hotCount = 0;
-  GROUPS.forEach(function(grp){
-    var items = C.filter(function(c){ return c.g === grp.id; })
-                 .sort(function(a,b){ return a.end - b.end; });
-    if(!items.length) return;
-
-    var sec = document.createElement("section");
-    sec.setAttribute("data-group", grp.id);
-
-    var head = document.createElement("div");
-    head.className = "sec-head";
-    head.innerHTML = '<h2>' + esc(grp.label) + '</h2><span class="count">' + items.length + '건</span>';
-    sec.appendChild(head);
-
-    var note = document.createElement("p");
-    note.className = "sec-note";
-    note.textContent = grp.note;
-    sec.appendChild(note);
-
-    items.forEach(function(c){
-      var n = days(c.end);
-      var u = urgency(n, c.rolling);
-      if(n >= 0) openCount++;
-      if(n >= 0 && n <= 14) hotCount++;
-
-      var el = document.createElement("article");
-      el.className = "entry " + u;
-
-      var ddayTxt, untilTxt;
-      if(c.rolling){ ddayTxt = "상시"; untilTxt = c.rolling; }
-      else if(n < 0){ ddayTxt = "마감"; untilTxt = md(c.end); }
-      else { ddayTxt = "D-" + n; untilTxt = md(c.end) + " 마감"; }
-
-      var html = '<div class="dday"><span class="d">' + ddayTxt + '</span>' +
-                 '<span class="until">' + untilTxt + '</span></div><div class="body">';
-
-      html += '<h3>' + (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' : esc(c.name)) + '</h3>';
-      html += '<p class="org">' + esc(c.org) + '</p>';
-
-      if(c.tags && c.tags.length){
-        html += '<div class="tags">';
-        c.tags.forEach(function(t){
-          var cls = /Web3|블록체인/.test(t) ? "tag web3" : (/한정/.test(t) ? "tag warn" : "tag");
-          html += '<span class="' + cls + '">' + esc(t) + '</span>';
-        });
-        html += '</div>';
-      }
-
-      html += '<dl class="facts">';
-      html += '<dt>참가자격</dt><dd><b>' + esc(c.who) + '</b></dd>';
-      if(c.team && c.team !== "—") html += '<dt>팀 구성</dt><dd>' + esc(c.team) + '</dd>';
-      html += '<dt>시상</dt><dd class="won">' + esc(c.prize) + '</dd>';
-      html += '<dt>주제</dt><dd>' + esc(c.topic) + '</dd>';
-      if(c.sched) html += '<dt>일정</dt><dd>' + esc(c.sched) + '</dd>';
-      if(c.place) html += '<dt>장소</dt><dd>' + esc(c.place) + '</dd>';
-      html += '</dl>';
-
-      if(c.start && !c.rolling){
-        var span = c.end - c.start;
-        var elapsed = Math.min(Math.max(TODAY - c.start, 0), span);
-        var pct = span > 0 ? (elapsed / span) * 100 : 100;
-        html += '<div class="win"><div class="win-track">' +
-                '<div class="win-fill" style="width:' + pct.toFixed(1) + '%"></div>' +
-                (n >= 0 ? '<div class="win-now" style="left:calc(' + pct.toFixed(1) + '% - 1px)"></div>' : '') +
-                '</div><div class="win-labels"><span>' + md(c.start) + ' 접수 시작</span><span>' + md(c.end) + ' 마감</span></div></div>';
-      }
-
-      if(c.note) html += '<p class="note">' + esc(c.note) + '</p>';
-      if(c.warn) html += '<p class="note caution">' + esc(c.warn) + '</p>';
-      if(c.url) html += '<a class="link" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기</a>';
-
-      html += '</div>';
-      el.innerHTML = html;
-      sec.appendChild(el);
-    });
-
-    board.appendChild(sec);
-  });
-  updateSummary();
-  applyFilter();
+    if(!PICKS[k]) PICKS[k] = {};
+    if(PICKS[k][who]){ delete PICKS[k][who]; push("/picks/"+k+"/"+who, null); }
+    else { PICKS[k][who] = true; push("/picks/"+k+"/"+who, true); }
+    render();
   }
 
-  /* summary */
-  function updateSummary(){
-    var m = TODAY.getUTCMonth()+1, dd = TODAY.getUTCDate();
-    document.getElementById("today-str").textContent = TODAY.getUTCFullYear() + "." + (m<10?"0":"") + m + "." + (dd<10?"0":"") + dd + " (KST)";
-    document.getElementById("n-open").textContent = openCount;
-    document.getElementById("n-hot").textContent = hotCount;
-  }
-
-  /* filters */
-  var currentFilter = "all";
-  function applyFilter(){
-    Array.prototype.forEach.call(board.querySelectorAll("section"), function(s){
-      s.hidden = !(currentFilter === "all" || s.getAttribute("data-group") === currentFilter);
-    });
-  }
-
-  var bar = document.getElementById("filters");
-  var all = document.createElement("button");
-  all.className = "chip"; all.type = "button";
-  all.setAttribute("aria-pressed","true");
-  all.innerHTML = '전체 <span class="n">' + C.length + '</span>';
-  all.dataset.target = "all";
-  bar.appendChild(all);
-
-  GROUPS.forEach(function(g){
-    var cnt = C.filter(function(c){ return c.g === g.id; }).length;
-    if(!cnt) return;
-    var b = document.createElement("button");
-    b.className = "chip"; b.type = "button";
-    b.setAttribute("aria-pressed","false");
-    b.innerHTML = esc(g.label) + ' <span class="n">' + cnt + '</span>';
-    b.dataset.target = g.id;
-    bar.appendChild(b);
-  });
-
-  bar.addEventListener("click", function(e){
-    var btn = e.target.closest(".chip");
-    if(!btn) return;
-    Array.prototype.forEach.call(bar.querySelectorAll(".chip"), function(c){
-      c.setAttribute("aria-pressed", c === btn ? "true" : "false");
-    });
-    currentFilter = btn.dataset.target;
-    applyFilter();
-  });
-
-  /* past table */
-  var pb = document.getElementById("past-body");
-  PAST.forEach(function(r){
-    var tr = document.createElement("tr");
-    tr.innerHTML = '<td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td>' +
-                   '<td class="when">' + esc(r[2]) + '</td><td>' + esc(r[3]) + '</td>';
-    pb.appendChild(tr);
-  });
-
-  /* ================= 협업 뷰 ================= */
-
-  var byName = {};
-  C.forEach(function(c){ byName[c.name] = c; });
-
-  /* 공모전 → 소속 번들. 금요일 뷰에서 "이건 어떤 아이템으로 나가는가"를 붙여주기 위함. */
-  var bundleOf = {};
-  BUNDLES.forEach(function(b){
-    b.members.forEach(function(n){ bundleOf[n] = b; });
-  });
-
-  function ddayOf(c){
-    if(c.rolling) return { txt:"상시", n:999, cls:"u-roll" };
+  /* ---------- 렌더 ---------- */
+  function ddayHTML(c){
+    if(c.rolling) return '<div class="c-d">상시<small>수시 접수</small></div>';
     var n = days(c.end);
-    return { txt:(n < 0 ? "마감" : "D-" + n), n:n, cls:urgency(n, false) };
+    var t = n < 0 ? "마감" : "D-" + n;
+    return '<div class="c-d' + (n >= 0 && n <= 7 ? " hot" : "") + '">' + t +
+           '<small>' + md(c.end) + '</small></div>';
+  }
+  function whoHTML(name){
+    var t = picked(name,"tae"), j = picked(name,"jian");
+    if(!t && !j) return "";
+    var h = '<div class="who">';
+    if(t && j) h += '<span class="tag" data-w="both">둘 다 선택</span>';
+    else if(t) h += '<span class="tag" data-w="tae">태영</span>';
+    else       h += '<span class="tag" data-w="jian">지안</span>';
+    return h + '</div>';
+  }
+  function pickBtn(name){
+    var t = picked(name,"tae"), j = picked(name,"jian");
+    var label = (t||j) ? "선택됨" : "선택";
+    return '<div class="pickwrap"><button class="pickbtn" type="button" data-pick="' + esc(name) +
+           '" data-has="' + ((t||j)?"1":"0") + '" aria-expanded="false">' + label + ' ▾</button></div>';
   }
 
-  /* --- 픽 컨트롤 HTML --- */
-  function picksHTML(name){
-    var h = '<div class="picks">';
-    h += '<div class="pickset" data-name="' + esc(name) + '">';
-    ["yes","maybe","no"].forEach(function(v){
-      var on = ME && getPick(name, ME) === v;
-      h += '<button type="button" data-v="' + v + '" aria-pressed="' + (on?"true":"false") + '">' + PICK_LABEL[v] + '</button>';
-    });
-    h += '</div>';
-    PEOPLE.forEach(function(p){
-      if(p.id === ME) return;
-      var v = getPick(name, p.id);
-      h += '<span class="peer">' + esc(p.name) +
-           '<span class="v"' + (v?' data-v="'+v+'"':'') + '>' + (v ? PICK_LABEL[v] : "아직") + '</span></span>';
-    });
-    h += '</div>';
-    return h;
-  }
-
-  /* --- 번들 뷰 --- */
-  var bundlesEl = document.getElementById("bundles");
-  function renderBundles(){
-    var h = "";
-    BUNDLES.forEach(function(b){
-      var items = b.members.map(function(n){ return byName[n]; }).filter(Boolean)
-                   .sort(function(a,z){ return a.end - z.end; });
-
-      h += '<div class="bundle">';
-      h += '<div class="bundle-top"><span class="bundle-key">' + esc(b.key) + '</span>' +
-           '<h3>' + esc(b.title) + '</h3>' +
-           '<span class="bundle-yield">' + esc(b.yield) + '</span></div>';
-      h += '<p class="bundle-what">' + b.what + '</p>';
-      if(b.warn) h += '<p class="bundle-warn">' + b.warn + '</p>';
-
-      if(b.reuse !== "blocked"){
-        var soon = items.filter(function(c){ var n = days(c.end); return n >= 0; })
-                        .map(function(c){ return days(c.end); });
-        if(soon.length) h += '<p class="bundle-pot">가장 빠른 마감 D-' + Math.min.apply(null, soon) + ' · 총 ' + items.length + '건</p>';
-      }
-
-      if(b.reuse !== "blocked"){
-        var mk = "bundle_" + b.key;
-        var mm = getMemo(mk);
-        h += '<div class="memo"><textarea data-memokey="' + mk + '" rows="1" placeholder="이 묶음으로 밀 아이템 한 줄 —  예) 포항 어르신 대상 AI 행정 도우미">' +
-             esc(mm ? mm.text : "") + '</textarea>' +
-             '<span class="memo-by">' + (mm ? esc(personName(mm.by)) : "") + '</span></div>';
-      }
-
-      h += '<div class="bundle-list">';
+  var allEl = document.getElementById("v-all");
+  function renderAll(){
+    var open = 0, h = "";
+    GROUPS.forEach(function(g){
+      var items = C.filter(function(c){ return c.g === g.id; })
+                   .sort(function(a,b){ return a.end - b.end; });
+      if(!items.length) return;
+      h += '<div class="topic"><div class="topic-h"><h2>' + esc(g.label) +
+           '</h2><span class="n">' + items.length + '</span></div>';
       items.forEach(function(c){
-        var dd = ddayOf(c);
-        h += '<div class="brow">';
-        h += '<span class="brow-d ' + dd.cls + '" style="color:var(--' +
-             (dd.cls === "u-hot" ? "u-hot" : dd.cls === "u-warm" ? "u-warm" : dd.cls === "u-gone" ? "u-gone" : dd.cls === "u-roll" ? "accent" : "u-ok") + ')">' + dd.txt + '</span>';
-        h += '<span class="brow-name"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
-             '<span class="sub">' + esc(c.prize) + '</span></span>';
-        h += (b.reuse === "blocked") ? '<span class="peer"><span class="v">지원 불가</span></span>' : picksHTML(c.name);
+        if(c.rolling || days(c.end) >= 0) open++;
+        h += '<article class="c"><div class="c-head">' + ddayHTML(c) +
+             '<div><p class="c-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
+             esc(c.name) + '</a></p><p class="c-org">' + esc(c.org) + '</p>' + whoHTML(c.name) + '</div>' +
+             pickBtn(c.name) + '</div>';
+        h += '<div class="c-body"><dl>';
+        h += '<dt>참가자격</dt><dd><b>' + esc(c.who) + '</b></dd>';
+        if(c.team && c.team !== "—") h += '<dt>팀 구성</dt><dd>' + esc(c.team) + '</dd>';
+        h += '<dt>시상</dt><dd class="mono">' + esc(c.prize) + '</dd>';
+        h += '<dt>주제</dt><dd>' + esc(c.topic) + '</dd>';
+        if(c.sched) h += '<dt>일정</dt><dd>' + esc(c.sched) + '</dd>';
+        if(c.place) h += '<dt>장소</dt><dd>' + esc(c.place) + '</dd>';
+        h += '</dl>';
+        if(c.note) h += '<p class="p-note">' + esc(c.note) + '</p>';
+        if(c.warn) h += '<p class="p-warn">' + esc(c.warn) + '</p>';
+        h += '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>';
+        h += '</div></article>';
+      });
+      h += '</div>';
+    });
+    allEl.innerHTML = h;
+    document.getElementById("n-open").textContent = open;
+  }
+
+  var pickedEl = document.getElementById("picked");
+  function renderPicked(){
+    var h = "", total = 0;
+    PEOPLE.forEach(function(p){
+      var mine = C.filter(function(c){ return picked(c.name, p.id); });
+      total += mine.length;
+      h += '<div class="person"><div class="person-h" data-p="' + p.id + '"><h2>' + p.name +
+           '</h2><span class="n">' + mine.length + '건</span></div>';
+      if(!mine.length){ h += '<p class="empty">아직 선택한 공모전이 없습니다.</p></div>'; return; }
+      GROUPS.forEach(function(g){
+        var items = mine.filter(function(c){ return c.g === g.id; })
+                        .sort(function(a,b){ return a.end - b.end; });
+        if(!items.length) return;
+        h += '<div class="sub-topic"><h3>' + esc(g.label) + '</h3>';
+        items.forEach(function(c){
+          var both = picked(c.name,"tae") && picked(c.name,"jian");
+          h += '<div class="pick-row' + (both?" both":"") + '">' + ddayHTML(c) +
+               '<div><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
+               '<span class="sub2">' + esc(c.prize) + '</span></div>' +
+               (both ? '<span class="tag" data-w="both">둘 다</span>' : '<span></span>') +
+               '</div>';
+        });
         h += '</div>';
       });
-      h += '</div></div>';
+      h += '</div>';
     });
-    bundlesEl.innerHTML = h;
+    pickedEl.innerHTML = h;
+    var b = document.querySelector('#tabs [data-v="pick"] .n');
+    if(b) b.textContent = total;
   }
 
-  /* --- 금요일 뷰 --- */
-  var fridayEl = document.getElementById("friday");
-  function renderFriday(){
-    var open = C.filter(function(c){ return c.rolling || days(c.end) >= 0; });
-    var blocked = {};
-    BUNDLES.forEach(function(b){ if(b.reuse === "blocked") b.members.forEach(function(n){ blocked[n] = 1; }); });
-    open = open.filter(function(c){ return !blocked[c.name]; });
+  function render(){ renderAll(); renderPicked(); }
 
-    var agree = [], split = [], half = [], none = [];
-    open.forEach(function(c){
-      var vs = PEOPLE.map(function(p){ return getPick(c.name, p.id); });
-      var picked = vs.filter(Boolean);
-      if(picked.length === 0){ none.push(c); return; }
-      if(picked.length < PEOPLE.length){ half.push(c); return; }
-      var allYes = vs.every(function(v){ return v === "yes"; });
-      var allSame = vs.every(function(v){ return v === vs[0]; });
-      if(allYes) agree.push(c);
-      else if(allSame) return;              // 둘 다 패스/고민으로 일치 → 굳이 안 띄운다
-      else split.push(c);
-    });
-
-    function sortD(a,z){ return a.end - z.end; }
-    [agree,split,half,none].forEach(function(a){ a.sort(sortD); });
-
-    var urgentNone = none.filter(function(c){ return !c.rolling && days(c.end) <= 14; });
-
-    function block(color, title, note, list, showPicks){
-      var h = '<div class="fri-group"><div class="fri-head">' +
-              '<span class="dot2" style="background:' + color + '"></span>' +
-              '<h3>' + esc(title) + '</h3><span class="n">' + list.length + '건</span></div>';
-      h += '<p class="fri-note">' + note + '</p>';
-      if(!list.length){ h += '<p class="fri-empty">해당 없음</p></div>'; return h; }
-      list.forEach(function(c){
-        var dd = ddayOf(c);
-        h += '<div class="fri-item">';
-        h += '<span class="brow-d" style="color:var(--' +
-             (dd.cls === "u-hot" ? "u-hot" : dd.cls === "u-warm" ? "u-warm" : dd.cls === "u-gone" ? "u-gone" : dd.cls === "u-roll" ? "accent" : "u-ok") + ')">' + dd.txt + '</span>';
-        h += '<span class="brow-name"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
-             '<span class="sub">' + esc(c.prize) + '</span></span>';
-        h += showPicks ? picksHTML(c.name) : '<span></span>';
-        var bd = bundleOf[c.name];
-        var mm = bd ? getMemo("bundle_" + bd.key) : null;
-        if(mm && mm.text){
-          h += '<span class="memo-line"><b>' + esc(bd.key) + '</b> ' + esc(mm.text) +
-               ' <span style="color:var(--ink-3)">— ' + esc(personName(mm.by)) + '</span></span>';
-        }
-        h += '</div>';
-      });
-      return h + '</div>';
-    }
-
-    var h = "";
-    h += block("var(--u-ok)",  "둘 다 하자 — 확정",
-          "이견 없습니다. 회의에서 시간 쓸 필요 없이 바로 역할만 나누면 됩니다.", agree, true);
-    h += block("var(--u-hot)", "갈렸음 — 여기부터 이야기",
-          "한 명은 하자고 하고 다른 한 명은 아닙니다. <b>회의의 본체입니다.</b>", split, true);
-    h += block("var(--u-warm)","한 명만 봤음",
-          "나머지 한 명이 아직 의견을 안 냈습니다. 금요일 전에 훑어두면 회의가 짧아집니다.", half, true);
-    h += block("var(--ink-3)", "아직 아무도 안 봄",
-          urgentNone.length
-            ? "이 중 <b>" + urgentNone.length + "건은 2주 안에 마감</b>됩니다. 위쪽부터 보세요."
-            : "급한 건 없습니다. 시간 나면 훑어보세요.", none, true);
-    fridayEl.innerHTML = h;
-
-    var badge = document.querySelector('#tabs [data-view="friday"] .badge');
-    if(badge){
-      if(split.length){ badge.textContent = split.length; badge.hidden = false; }
-      else badge.hidden = true;
+  /* ---------- 선택 팝오버 ---------- */
+  function closePop(){
+    var p = document.querySelector(".pop");
+    if(p){
+      var b = p.parentNode.querySelector(".pickbtn");
+      if(b) b.setAttribute("aria-expanded","false");
+      p.remove();
     }
   }
-
-  function rerender(){ renderBundles(); renderFriday(); }
-
-  /* ---------- 자정(KST) 감시 ----------
-     페이지를 켜둔 채 날짜가 넘어가도 D-day가 멈춰 있지 않게 한다.
-     1분마다 KST 달력일을 확인하고, 바뀌었으면 TODAY를 다시 잡아 전체를 다시 그린다. */
-  function refreshDate(){
-    var p = kstTodayParts();
-    if(p.y === _kp.y && p.m === _kp.m && p.d === _kp.d) return false;
-    _kp = p;
-    TODAY = new Date(Date.UTC(p.y, p.m - 1, p.d));
-    renderBoard();      // 마감순 뷰 (D-day, 진행바, 상단 집계)
-    rerender();         // 번들 뷰 · 금요일 뷰
-    return true;
-  }
-  setInterval(refreshDate, 60000);
-  // 절전에서 깨어나거나 탭을 다시 볼 때는 즉시 확인 (타이머가 밀려 있을 수 있음)
-  document.addEventListener("visibilitychange", function(){
-    if(!document.hidden) refreshDate();
-  });
-  window.addEventListener("focus", refreshDate);
-
-  /* --- 이벤트 위임: 픽 버튼 --- */
   document.addEventListener("click", function(e){
-    var btn = e.target.closest(".pickset button");
-    if(!btn) return;
-    var set = btn.closest(".pickset");
-    setPick(set.getAttribute("data-name"), btn.getAttribute("data-v"));
-  });
+    var btn = e.target.closest("[data-pick]");
+    var inPop = e.target.closest(".pop");
+    if(!btn && !inPop){ closePop(); return; }
 
-  /* --- 메모: 입력 멈추면 저장 --- */
-  var memoTimer = null;
-  document.addEventListener("input", function(e){
-    var ta = e.target;
-    if(!ta.matches || !ta.matches("textarea[data-memokey]")) return;
-    if(!ME){ setSync("off","먼저 '나는' 을 골라주세요"); return; }
-    clearTimeout(memoTimer);
-    var key = ta.getAttribute("data-memokey"), val = ta.value.trim();
-    memoTimer = setTimeout(function(){ setMemo(key, val); }, 600);
-  });
+    if(btn){
+      var wasOpen = btn.getAttribute("aria-expanded") === "true";
+      closePop();
+      if(wasOpen) return;
+      var name = btn.getAttribute("data-pick");
+      var pop = document.createElement("div");
+      pop.className = "pop";
+      pop.innerHTML = PEOPLE.map(function(p){
+        var on = picked(name, p.id);
+        return '<button type="button" data-p="' + p.id + '" data-n="' + esc(name) +
+               '" aria-pressed="' + (on?"true":"false") + '"><span class="box">' +
+               (on?"✓":"") + '</span>' + p.name + '</button>';
+      }).join("");
+      btn.parentNode.appendChild(pop);
+      btn.setAttribute("aria-expanded","true");
+      return;
+    }
 
-  /* --- 나는 누구 --- */
-  var whoEl = document.getElementById("who");
-  function renderWho(){
-    whoEl.innerHTML = PEOPLE.map(function(p){
-      return '<button type="button" data-p="' + p.id + '" aria-pressed="' + (ME===p.id?"true":"false") + '">' + esc(p.name) + '</button>';
-    }).join("");
-  }
-  whoEl.addEventListener("click", function(e){
-    var b = e.target.closest("button[data-p]");
-    if(!b) return;
-    ME = b.getAttribute("data-p");
-    try{ localStorage.setItem("hgu.me", ME); }catch(err){}
-    renderWho(); rerender();
+    var pb = e.target.closest(".pop button");
+    if(pb){ toggle(pb.getAttribute("data-n"), pb.getAttribute("data-p")); closePop(); }
   });
-  try{ ME = localStorage.getItem("hgu.me"); }catch(err){}
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closePop(); });
 
-  /* --- 탭 --- */
-  var VIEWS = [
-    { id:"bundle",   label:"아이템 번들" },
-    { id:"friday",   label:"금요일 회의", badge:true },
-    { id:"deadline", label:"전체 · 마감순" }
-  ];
-  var tabsEl = document.getElementById("tabs");
-  tabsEl.innerHTML = VIEWS.map(function(v,i){
-    return '<button type="button" role="tab" data-view="' + v.id + '" aria-selected="' + (i===0?"true":"false") + '">' +
-           esc(v.label) + (v.badge ? '<span class="badge" hidden></span>' : '') + '</button>';
+  /* ---------- 탭 ---------- */
+  var VIEWS = [{id:"all", label:"공모전"}, {id:"pick", label:"선택 후보"}];
+  var tabs = document.getElementById("tabs");
+  tabs.innerHTML = VIEWS.map(function(v,i){
+    return '<button type="button" role="tab" data-v="' + v.id + '" aria-selected="' + (i===0) + '">' +
+           v.label + '<span class="n"></span></button>';
   }).join("");
-  tabsEl.addEventListener("click", function(e){
-    var b = e.target.closest("button[data-view]");
+  tabs.addEventListener("click", function(e){
+    var b = e.target.closest("button[data-v]");
     if(!b) return;
-    var v = b.getAttribute("data-view");
-    Array.prototype.forEach.call(tabsEl.querySelectorAll("button"), function(x){
+    closePop();
+    var v = b.getAttribute("data-v");
+    Array.prototype.forEach.call(tabs.querySelectorAll("button"), function(x){
       x.setAttribute("aria-selected", x === b ? "true" : "false");
     });
-    VIEWS.forEach(function(x){ document.getElementById("view-" + x.id).hidden = (x.id !== v); });
-    document.getElementById("past").hidden = (v !== "deadline");
+    VIEWS.forEach(function(x){ document.getElementById("v-" + x.id).hidden = (x.id !== v); });
+    document.getElementById("past").hidden = (v !== "all");
   });
-  document.getElementById("past").hidden = true;
 
-  /* --- 시작 --- */
-  loadLocal();
-  renderWho();
-  renderBoard();
-  rerender();
-  connect();
+  /* ---------- 자정(KST) 갱신 ---------- */
+  function refreshDate(){
+    var p = kstParts();
+    if(p.y===KP.y && p.m===KP.m && p.d===KP.d) return;
+    KP = p; TODAY = new Date(Date.UTC(p.y, p.m-1, p.d));
+    stamp(); render();
+  }
+  function stamp(){
+    document.getElementById("today").textContent =
+      KP.y + "." + (KP.m<10?"0":"") + KP.m + "." + (KP.d<10?"0":"") + KP.d;
+  }
+  setInterval(refreshDate, 60000);
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) refreshDate(); });
+  window.addEventListener("focus", refreshDate);
+
+  /* ---------- 지난 대회 ---------- */
+  var pb2 = document.getElementById("past-body");
+  PAST.forEach(function(r){
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td class="w">'+esc(r[2])+'</td><td>'+esc(r[3])+'</td>';
+    pb2.appendChild(tr);
+  });
+
+  /* ---------- 시작 ---------- */
+  loadLocal(); stamp(); render(); connect();
+  document.querySelector('#tabs [data-v="all"] .n').textContent = C.length;
 })();
 </script>
