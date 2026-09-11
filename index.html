@@ -18,6 +18,9 @@
     --warn:#9A3B2F;
     --hot:#B3352A;
     --on-solid:#FFFFFF;
+    --dv-doc:#55606E;   --dv-doc-bg:#ECEFF2;
+    --dv-media:#6B4A94; --dv-media-bg:#F0EAF7;
+    --dv-build:#1F6B57; --dv-build-bg:#E3F0EB;
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
@@ -27,6 +30,9 @@
       --jian:#E0A06A; --jian-bg:#2E2318;
       --both:#77CCA5; --both-bg:#152A22;
       --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
+      --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
+      --dv-media:#C4A3E8; --dv-media-bg:#271E33;
+      --dv-build:#7FC9AE; --dv-build-bg:#15291F;
     }
   }
   :root[data-theme="dark"]{
@@ -36,6 +42,9 @@
     --jian:#E0A06A; --jian-bg:#2E2318;
     --both:#77CCA5; --both-bg:#152A22;
     --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
+    --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
+    --dv-media:#C4A3E8; --dv-media-bg:#271E33;
+    --dv-build:#7FC9AE; --dv-build-bg:#15291F;
   }
 
   *{box-sizing:border-box}
@@ -95,6 +104,19 @@
   .c-title a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
   .c-title a:hover{border-bottom-color:var(--ink-3)}
   .c-org{font-size:12.5px;color:var(--ink-3);margin:2px 0 0}
+
+  /* 제출물 칩 — 문서 / 미디어 / 구현 */
+  .dv{
+    display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+    font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:5px;
+  }
+  .dv i{
+    font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;
+    font-style:normal;opacity:.72;letter-spacing:.04em;
+  }
+  .dv[data-t="doc"]  {background:var(--dv-doc-bg);  color:var(--dv-doc)}
+  .dv[data-t="media"]{background:var(--dv-media-bg);color:var(--dv-media)}
+  .dv[data-t="build"]{background:var(--dv-build-bg);color:var(--dv-build)}
 
   /* ---- pick ---- */
   .pickwrap{position:relative}
@@ -327,7 +349,7 @@
     topic:"포용금융·디지털 격차 해소, 금융 소외계층 서비스, 소상공인, 시민 일상금융, 블록체인 신원 인프라(마이데이터 안전 공유·데이터 주권·토큰화 자산), 자유주제",
     sched:"9/23 본선 진출 10팀 발표 → 9/28 전문가 멘토링(대구 DIP) → 10/22 본선 발표·시상식(대구 EXCO)",
     note:"블록체인 신원 인프라 트랙이 따로 있어서 순수 Web3 아이디어로 붙을 수 있는 몇 안 되는 국내 공모전입니다. 제1회라 과거 수상작 경향이 없어 진입이 상대적으로 열려 있습니다.",
-    url:"https://www.contestkorea.com/sub/view.php?Txt_gbn=1&Txt_bcode=030310001&str_no=202608130040"
+    url:"https://www.im-challenge.com/pages/details/"
   },
   {
     g:"web3", name:"2026 제9회 핀테크 아이디어 공모전", org:"금융위원회 · 한국핀테크지원센터",
@@ -648,6 +670,79 @@
     ["2026 코드게이트 AI 스타트업 해커톤","코드게이트","~7/8","총 2,500만원."]
   ];
 
+  /* ---------- 제출물 ----------
+     [라벨, 유형, 상세]  유형: doc 문서·기획 / media 영상·이미지 / build 코드·구현 */
+  var DELIVER = {
+    "GWDC 2026 Korea 해커톤":
+      ["현장 개발 + 피칭","build","9/28 17:00 체크인 후 48시간 무박 코딩으로 작동하는 결과물을 만듭니다. 상위 10팀은 메인 스테이지에서 5분 피칭 + Q&A."],
+    "(iM뱅크) 2026 AI Blockchain 경진대회":
+      ["제안요약서 + 프로토타입(구현 코드)","build","접수 단계부터 프로토타입 구현 코드가 필수입니다. 참가신청서·참가서약서·개인정보 동의서·제안요약서와 함께 냅니다. 서류로 본선 10팀을 가린 뒤 멘토링(9/28)을 거쳐 10/22 대구 EXCO에서 발표."],
+    "2026 제9회 핀테크 아이디어 공모전":
+      ["아이디어 제안서 → 피칭","doc","핀테크포털 온라인 접수. 본선 진출자는 11월 1~3주 피칭 컨설팅을 받은 뒤 11/26 발표심사. 제출 서식 상세는 공고문(hwp) 첨부에 있으니 접수 전 확인하세요."],
+    "2026년 전통시장 디지털 혁신 아이디어 공모전":
+      ["아이디어 신청서","doc","공고문 서식에 작성해 이메일로 제출."],
+
+    "2026 뉴스빅데이터 해커톤":
+      ["예선 기획서 → 본선 프로토타입","build","예선은 기획서 1부만 내면 됩니다. 본선은 빅카인즈 API를 실제로 붙인 작동 결과물과 시연 영상·GIF·화면캡처가 필수이고, 기획안이나 스토리보드만 내면 인정되지 않습니다."],
+    "제6회 K-인공지능(AI) 제조데이터 분석 경진대회":
+      ["코드 (Python 모델)","build","KAMP에 등재된 제조 AI 데이터셋으로 분석 모델을 개발합니다. Python · Anaconda-Jupyter 환경."],
+    "2026 데이터+AI 혁신챌린지 : 데이터안심구역 경진대회":
+      ["아이디어 제안서 → 데이터 분석","build","제안서로 접수하고, 예선에서 서면·기술평가를 거쳐 본선 발표평가로 갑니다."],
+    "제3회 미래융합인재 발굴 소프트웨어 챌린지":
+      ["AI·SW 개발 결과물","build","피지컬 AI·로보틱스 / AI·빅데이터 / 온디바이스 AI / 사이버보안 / 자유주제 중 택 1."],
+    "2026 AI·디지털 기반 사회문제 해결 챌린지":
+      ["AI 서비스 개발","build","민간 클라우드 자원을 지원받아 실제로 동작하는 서비스를 만듭니다."],
+    "2026 국방 AI 경진대회 (MAICON)":
+      ["예선 코드 → 본선 로봇 구동","build","예선은 온라인 AI 데이터 분석 과제(Data Science Test). 본선은 현장에서 AI 로봇으로 모의 군사 임무를 수행하고, 주행 성능 비중이 큽니다."],
+    "2026 해운·항만·물류 AX 혁신 아이디어 공모전":
+      ["아이디어 기획서","doc","공사 홈페이지에서 서식을 내려받아 작성 후 온라인 접수."],
+    "2026 DATA·AI 분석 경진대회":
+      ["문제 제안서","doc","지금 열린 문제발굴 부문은 풀 만한 문제를 제안하는 단계입니다. 모델 개발은 다음 부문에서 진행됩니다."],
+
+    "KNIH-KSBi Joint Healthcare AI Challenge 2026":
+      ["AI 모델 (코드) + 발표","build","제공된 합성데이터로 질병 예측 모델을 만들고 성능을 검증합니다. 1차 서면평가(10/31) → 2차 발표평가(11/17)."],
+
+    "2026 경상북도 도민체감형 AX 경진대회":
+      ["아이디어 신청서 2장","doc","응모신청서와 개인정보·저작권 동의서가 전부입니다. 완성물 없이 아이디어만으로 응모할 수 있습니다."],
+    "제22회 한국능률협회컨설팅(KMAC) 경영혁신 대학(원)생 공모전":
+      ["보고서 A4 20p + PT","doc","보고서 1부와 AI 활용 내역서·확약서를 이메일로 제출. 1차 서류를 통과한 20팀이 2차 PT 심사를 받습니다."],
+    "2026 AI 창업 경진대회":
+      ["사업계획서 → 발표","doc","예선은 서류평가, 본선은 발표평가. 예비창업자 대상이라 시제품이 필수는 아닙니다."],
+    "2026년 GovTech 창업 경진대회":
+      ["트랙 선택 — 기획서 또는 개발물","doc","아이디어 기획 트랙은 제안서만, 제품·서비스 개발 트랙은 구현물이 필요합니다. 1차 서면 → 2차 발표."],
+    "2026 전국 로켓피치 경진대회":
+      ["피칭 (현장 발표)","doc","10/24 사천공군비행장에서 당일 발표. 구글폼 접수 후 제출서류를 개별 안내받습니다."],
+    "2026년 창원시 AI·데이터 활용 공모전":
+      ["아이디어 기획서","doc","공공데이터를 활용한 아이디어 또는 서비스를 온라인으로 제출."],
+
+    "[세븐일레븐] K-비빔밥 AI 광고제 「ㄸ뚜ㅁ뜨뜨」":
+      ["AI 영상 (세로 10~30초)","media","9:16 MP4, 500MB 이하. 인스타그램에 필수 태그와 함께 올린 뒤 구글폼 제출. AI로 만들었다는 근거 자료(제작 화면 캡처 등)도 필수입니다."],
+    "2026 충북 AI광고제":
+      ["AI 영상 (가로 3~5분)","media","Full HD 가로형. 제작에 쓴 AI 기술 정보를 반드시 함께 제출해야 합니다."],
+    "GS칼텍스 에너지플러스 앱 '바로주유' 영상 공모전":
+      ["영상 (30초~3분)","media","가로/세로 택 1. SNS에 필수 해시태그로 공개 게시한 뒤 네이버폼 제출. 조회수·좋아요가 심사의 30%입니다."],
+    "[문화체육관광부×한국문화정보원] 문화데이터 활용 영상 제작 AI 챌린지":
+      ["AI 영상 (가로 10초~1분)","media","16:9 1080p MP4, 500MB 이하. AI-Kive에 업로드하면 좋아요·시청 완주율 같은 관객평가가 점수에 반영됩니다."],
+    "[2026 디지털헤리티지페스타] AI 헤리티지 공모전":
+      ["AI 이미지 또는 영상","media","이미지 1920×1080 또는 60초 이내 영상 중 선택. 프롬프트 전문과 생성 과정 캡처를 반드시 내야 하고, 빠지면 무효 처리됩니다."],
+    "제44회 교통안전 홍보작품 공모전":
+      ["영상 또는 포스터","media","광고영상 / 숏폼영상 / 광고포스터 3개 부문 중 선택. 포스터 한 장으로도 지원할 수 있습니다."],
+    "2026년 국가정책연구포털(NKIS) AI 쇼츠 영상공모전":
+      ["AI 쇼츠 (세로 120초)","media","9:16 Full HD MP4. 이메일 첨부로만 제출하며 외부 드라이브 링크는 금지입니다. 영상 내 필수 표기 문구 규정이 까다로우니 공고문 예시를 따라야 합니다."],
+    "2026 우리 농산물 과채류 매력 알리기 콘텐츠 공모전":
+      ["사진 · 영상 · 카드뉴스","media","부문별 규격이 다릅니다. 1인 3점까지 중복 응모할 수 있습니다."],
+    "전국민 AI 활용사례 공모전 시즌3":
+      ["블로그 글 또는 숏폼","media","스마트폰으로 만든 결과물을 공모전 사이트에 올리면 끝입니다. 개발이나 코딩이 전혀 필요 없습니다."],
+    "2026년 서울 영테크 공모전":
+      ["수기 · 숏폼 · 카드뉴스","media","후기 부문은 1~5매 수기, 홍보 부문은 숏폼 영상 또는 카드뉴스 10장 이하."],
+
+    "2026 AI·디지털 논문공모전":
+      ["논문 A4 15~25매","doc","논문 본문·요약서와 함께 연구윤리 준수서약서, KCI 문헌 유사도 검사 결과 확인서가 필요합니다. 유사도 검사에 시간이 걸리니 미리 돌려두세요."],
+    "AI노출지수 & 카나리아 대시보드 네이밍 공모전":
+      ["명칭 아이디어 (한 줄)","doc","네이버폼에 이름과 제안 배경을 적어 제출. 주제별 3건씩 최대 6건까지 낼 수 있습니다."]
+  };
+  var DTYPE_LABEL = { doc:"문서", media:"미디어", build:"구현" };
+
   var PEOPLE = [{ id:"tae", name:"태영" }, { id:"jian", name:"지안" }];
   function pname(id){ return id==="tae" ? "태영" : "지안"; }
 
@@ -753,6 +848,11 @@
     return '<div class="c-d' + (n >= 0 && n <= 7 ? " hot" : "") + '">' + t +
            '<small>' + md(c.end) + '</small></div>';
   }
+  function dvChip(name){
+    var d = DELIVER[name];
+    if(!d) return "";
+    return '<span class="dv" data-t="' + d[1] + '"><i>' + DTYPE_LABEL[d[1]] + '</i>' + esc(d[0]) + '</span>';
+  }
   function whoHTML(name){
     var t = picked(name,"tae"), j = picked(name,"jian");
     if(!t && !j) return "";
@@ -782,9 +882,12 @@
         if(c.rolling || days(c.end) >= 0) open++;
         h += '<article class="c"><div class="c-head">' + ddayHTML(c) +
              '<div><p class="c-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
-             esc(c.name) + '</a></p><p class="c-org">' + esc(c.org) + '</p>' + whoHTML(c.name) + '</div>' +
+             esc(c.name) + '</a></p><p class="c-org">' + esc(c.org) + '</p>' +
+             dvChip(c.name) + whoHTML(c.name) + '</div>' +
              pickBtn(c.name) + '</div>';
         h += '<div class="c-body"><dl>';
+        var dv = DELIVER[c.name];
+        if(dv) h += '<dt>제출물</dt><dd><b>' + esc(dv[0]) + '</b><br>' + esc(dv[2]) + '</dd>';
         h += '<dt>참가자격</dt><dd><b>' + esc(c.who) + '</b></dd>';
         if(c.team && c.team !== "—") h += '<dt>팀 구성</dt><dd>' + esc(c.team) + '</dd>';
         h += '<dt>시상</dt><dd class="mono">' + esc(c.prize) + '</dd>';
@@ -825,7 +928,8 @@
 
           h += '<div class="pick-row' + (both?" both":"") + '">' + ddayHTML(c) +
                '<div><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
-               '<span class="sub2">' + esc(c.prize) + '</span></div>' +
+               '<span class="sub2">' + (DELIVER[c.name] ? esc(DELIVER[c.name][0]) + ' · ' : '') +
+               esc(c.prize) + '</span></div>' +
                (both ? '<span class="tag" data-w="both">둘 다</span>' : '<span></span>') +
                '<div class="memo-line">' +
                '<span class="memo-tag" data-w="' + p.id + '">메모</span>' +
