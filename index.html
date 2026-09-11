@@ -174,11 +174,21 @@
   .pick-row a:hover{text-decoration:underline}
   .pick-row .sub2{display:block;font-size:11.5px;color:var(--ink-3);font-weight:400;margin-top:1px}
 
-  /* 메모 — 비어 있을 땐 조용하고, 손대면 드러난다 */
+  /* 메모 — 라벨 + 본문. 비어 있을 땐 조용하고, 손대면 드러난다 */
+  .memo-line{
+    grid-column:2/-1;display:flex;align-items:flex-start;gap:9px;margin-top:7px;
+  }
+  .memo-line.peer{margin-top:2px}
+  .memo-tag{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+    letter-spacing:.03em;color:var(--ink-3);flex:none;padding-top:9px;
+  }
+  .memo-tag[data-w="tae"] {color:var(--tae)}
+  .memo-tag[data-w="jian"]{color:var(--jian)}
   textarea.memo{
-    /* align-self를 start로 두지 않으면 그리드가 행 높이만큼 늘려버려서
+    /* flex-start로 두지 않으면 컨테이너가 행 높이만큼 늘려버려서
        height:auto 측정값(scrollHeight)이 실제 내용 높이보다 커진다 */
-    grid-column:2/-1;align-self:start;margin-top:7px;width:100%;display:block;
+    flex:1;min-width:0;display:block;
     font:400 13px/1.5 "IBM Plex Sans KR",sans-serif;color:var(--ink);
     background:transparent;border:1px solid transparent;border-radius:5px;
     padding:5px 8px;resize:none;overflow:hidden;min-height:28px;
@@ -187,17 +197,10 @@
   textarea.memo:hover{border-color:var(--rule)}
   textarea.memo:focus{outline:none;border-color:var(--accent);background:var(--card)}
   .pick-row.both textarea.memo:focus{background:var(--bg)}
-  .memo-peer{
-    grid-column:2/-1;margin:5px 0 0;padding:5px 8px;
-    font-size:12.5px;line-height:1.5;color:var(--ink-2);
-    border-left:2px solid var(--rule);
+  .memo-text{
+    flex:1;min-width:0;padding:5px 8px;
+    font-size:13px;line-height:1.5;color:var(--ink-2);
   }
-  .memo-peer b{
-    font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
-    margin-right:7px;
-  }
-  .memo-peer[data-w="tae"]  b{color:var(--tae)}
-  .memo-peer[data-w="jian"] b{color:var(--jian)}
   .empty{color:var(--ink-3);font-size:13.5px;padding:16px 0}
   .legend{
     display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;
@@ -824,14 +827,18 @@
                '<div><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
                '<span class="sub2">' + esc(c.prize) + '</span></div>' +
                (both ? '<span class="tag" data-w="both">둘 다</span>' : '<span></span>') +
+               '<div class="memo-line">' +
+               '<span class="memo-tag" data-w="' + p.id + '">메모</span>' +
                '<textarea class="memo" rows="1" data-n="' + esc(c.name) + '" data-w="' + p.id + '"' +
-               ' placeholder="' + esc(p.name) + ' 메모 — 어떤 아이템으로 나갈지, 뭘 맡을지">' +
-               esc(mineMemo) + '</textarea>';
+               ' aria-label="' + esc(p.name) + ' 메모"' +
+               ' placeholder="어떤 아이템으로 나갈지, 뭘 맡을지">' +
+               esc(mineMemo) + '</textarea></div>';
 
           // 둘 다 고른 건은 상대 메모도 같이 보여준다 (읽기 전용)
           if(both && theirMemo){
-            h += '<p class="memo-peer" data-w="' + other + '"><b>' + esc(pname(other)) + '</b>' +
-                 esc(theirMemo) + '</p>';
+            h += '<div class="memo-line peer">' +
+                 '<span class="memo-tag" data-w="' + other + '">' + esc(pname(other)) + '</span>' +
+                 '<span class="memo-text">' + esc(theirMemo) + '</span></div>';
           }
           h += '</div>';
         });
