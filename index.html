@@ -173,6 +173,31 @@
   .pick-row.both a{color:var(--both);font-weight:600}
   .pick-row a:hover{text-decoration:underline}
   .pick-row .sub2{display:block;font-size:11.5px;color:var(--ink-3);font-weight:400;margin-top:1px}
+
+  /* 메모 — 비어 있을 땐 조용하고, 손대면 드러난다 */
+  textarea.memo{
+    /* align-self를 start로 두지 않으면 그리드가 행 높이만큼 늘려버려서
+       height:auto 측정값(scrollHeight)이 실제 내용 높이보다 커진다 */
+    grid-column:2/-1;align-self:start;margin-top:7px;width:100%;display:block;
+    font:400 13px/1.5 "IBM Plex Sans KR",sans-serif;color:var(--ink);
+    background:transparent;border:1px solid transparent;border-radius:5px;
+    padding:5px 8px;resize:none;overflow:hidden;min-height:28px;
+  }
+  textarea.memo::placeholder{color:var(--ink-3);opacity:.7}
+  textarea.memo:hover{border-color:var(--rule)}
+  textarea.memo:focus{outline:none;border-color:var(--accent);background:var(--card)}
+  .pick-row.both textarea.memo:focus{background:var(--bg)}
+  .memo-peer{
+    grid-column:2/-1;margin:5px 0 0;padding:5px 8px;
+    font-size:12.5px;line-height:1.5;color:var(--ink-2);
+    border-left:2px solid var(--rule);
+  }
+  .memo-peer b{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+    margin-right:7px;
+  }
+  .memo-peer[data-w="tae"]  b{color:var(--tae)}
+  .memo-peer[data-w="jian"] b{color:var(--jian)}
   .empty{color:var(--ink-3);font-size:13.5px;padding:16px 0}
   .legend{
     display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;
@@ -626,26 +651,34 @@
   /* ---------- 공유 상태 ---------- */
   var DB   = "https://hgu-contest-default-rtdb.asia-southeast1.firebasedatabase.app";
   var ROOT = "/v2";
-  var PICKS = {};                      // PICKS[cid] = {tae:true, jian:true}
-  var LKEY = "hgu.picks.v2";
+  // DATA.picks[cid] = {tae:true, jian:true}
+  // DATA.memos[cid] = {tae:"메모", jian:"메모"}   ← 사람별로 따로 적는다
+  var DATA = { picks:{}, memos:{} };
+  var LKEY = "hgu.board.v2";
 
   function cid(name){ return name.replace(/[.$#\[\]\/\s]/g,"").slice(0,40); }
-  function loadLocal(){ try{ PICKS = JSON.parse(localStorage.getItem(LKEY)) || {}; }catch(e){ PICKS = {}; } }
-  function saveLocal(){ try{ localStorage.setItem(LKEY, JSON.stringify(PICKS)); }catch(e){} }
+  function norm(o){
+    o = o || {};
+    if(!o.picks || typeof o.picks !== "object") o.picks = {};
+    if(!o.memos || typeof o.memos !== "object") o.memos = {};
+    return o;
+  }
+  function loadLocal(){
+    try{ DATA = norm(JSON.parse(localStorage.getItem(LKEY))); }catch(e){ DATA = norm(null); }
+  }
+  function saveLocal(){ try{ localStorage.setItem(LKEY, JSON.stringify(DATA)); }catch(e){} }
 
   var ledEl = document.getElementById("led"), ledT = document.getElementById("led-t");
   function led(s, t){ ledEl.setAttribute("data-s", s); ledT.textContent = t; }
 
   function applyAt(path, data, merge){
     if(path === "/" || path === ""){
-      PICKS = (data && data.picks) || {};
+      DATA = norm(data ? { picks:data.picks, memos:data.memos } : null);
       return;
     }
     var parts = path.split("/").filter(Boolean);
-    if(parts[0] !== "picks"){ return; }
-    parts.shift();
-    if(!parts.length){ PICKS = data || {}; return; }
-    var last = parts.pop(), node = PICKS;
+    if(parts[0] !== "picks" && parts[0] !== "memos") return;
+    var last = parts.pop(), node = DATA;
     parts.forEach(function(p){
       if(typeof node[p] !== "object" || node[p] === null) node[p] = {};
       node = node[p];
@@ -657,6 +690,7 @@
         if(data[k] === null) delete node[last][k]; else node[last][k] = data[k];
       });
     } else node[last] = data;
+    norm(DATA);
   }
 
   var fails = 0;
@@ -690,13 +724,22 @@
       .catch(function(){ led("off","저장 실패 · 이 기기에만 저장"); });
   }
 
-  function picked(name, who){ var p = PICKS[cid(name)]; return !!(p && p[who]); }
+  function picked(name, who){ var p = DATA.picks[cid(name)]; return !!(p && p[who]); }
   function toggle(name, who){
     var k = cid(name);
-    if(!PICKS[k]) PICKS[k] = {};
-    if(PICKS[k][who]){ delete PICKS[k][who]; push("/picks/"+k+"/"+who, null); }
-    else { PICKS[k][who] = true; push("/picks/"+k+"/"+who, true); }
+    if(!DATA.picks[k]) DATA.picks[k] = {};
+    if(DATA.picks[k][who]){ delete DATA.picks[k][who]; push("/picks/"+k+"/"+who, null); }
+    else { DATA.picks[k][who] = true; push("/picks/"+k+"/"+who, true); }
     render();
+  }
+
+  function memoOf(name, who){ var m = DATA.memos[cid(name)]; return (m && m[who]) || ""; }
+  function setMemo(name, who, text){
+    var k = cid(name);
+    if(!DATA.memos[k]) DATA.memos[k] = {};
+    text = text.trim();
+    if(!text){ delete DATA.memos[k][who]; push("/memos/"+k+"/"+who, null); }
+    else { DATA.memos[k][who] = text; push("/memos/"+k+"/"+who, text); }
   }
 
   /* ---------- 렌더 ---------- */
@@ -773,20 +816,84 @@
         h += '<div class="sub-topic"><h3>' + esc(g.label) + '</h3>';
         items.forEach(function(c){
           var both = picked(c.name,"tae") && picked(c.name,"jian");
+          var other = p.id === "tae" ? "jian" : "tae";
+          var mineMemo = memoOf(c.name, p.id);
+          var theirMemo = both ? memoOf(c.name, other) : "";
+
           h += '<div class="pick-row' + (both?" both":"") + '">' + ddayHTML(c) +
                '<div><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
                '<span class="sub2">' + esc(c.prize) + '</span></div>' +
                (both ? '<span class="tag" data-w="both">둘 다</span>' : '<span></span>') +
-               '</div>';
+               '<textarea class="memo" rows="1" data-n="' + esc(c.name) + '" data-w="' + p.id + '"' +
+               ' placeholder="' + esc(p.name) + ' 메모 — 어떤 아이템으로 나갈지, 뭘 맡을지">' +
+               esc(mineMemo) + '</textarea>';
+
+          // 둘 다 고른 건은 상대 메모도 같이 보여준다 (읽기 전용)
+          if(both && theirMemo){
+            h += '<p class="memo-peer" data-w="' + other + '"><b>' + esc(pname(other)) + '</b>' +
+                 esc(theirMemo) + '</p>';
+          }
+          h += '</div>';
         });
         h += '</div>';
       });
       h += '</div>';
     });
+    // 입력 중인 메모가 있으면 그 값/커서를 기억해 뒀다가 다시 그린 뒤 되돌린다.
+    // (상대가 픽을 바꾸면 SSE로 render()가 불려서, 이게 없으면 타이핑하던 글이 날아간다)
+    var a = document.activeElement, keep = null;
+    if(a && a.classList && a.classList.contains("memo")){
+      keep = { n:a.getAttribute("data-n"), w:a.getAttribute("data-w"),
+               v:a.value, s:a.selectionStart, e:a.selectionEnd };
+    }
+
     pickedEl.innerHTML = h;
+
+    if(keep){
+      var back = pickedEl.querySelector('textarea.memo[data-n="' + cssEsc(keep.n) + '"][data-w="' + keep.w + '"]');
+      if(back){
+        back.value = keep.v;                    // 서버 값보다 내가 치던 글이 우선
+        back.focus();
+        try{ back.setSelectionRange(keep.s, keep.e); }catch(err){}
+      }
+    }
+    autoGrowAll();
+
     var b = document.querySelector('#tabs [data-v="pick"] .n');
     if(b) b.textContent = total;
   }
+
+  function cssEsc(s){ return String(s).replace(/["\\]/g, "\\$&"); }
+  function autoGrow(t){
+    // 탭이 숨겨져 있으면 scrollHeight가 0으로 나온다. 그때 높이를 박아두면
+    // 탭을 열었을 때 칸이 찌그러지므로, 보일 때만 계산한다.
+    if(t.offsetParent === null){ t.style.height = ""; return; }
+    t.style.height = "auto";
+    t.style.height = Math.max(t.scrollHeight, 28) + "px";
+  }
+  function autoGrowAll(){
+    Array.prototype.forEach.call(pickedEl.querySelectorAll("textarea.memo"), autoGrow);
+  }
+
+  /* 메모 입력: 타이핑이 멎으면 저장 */
+  var memoTimers = {};
+  document.addEventListener("input", function(e){
+    var t = e.target;
+    if(!t.classList || !t.classList.contains("memo")) return;
+    autoGrow(t);
+    var n = t.getAttribute("data-n"), w = t.getAttribute("data-w"), key = w + "|" + n;
+    clearTimeout(memoTimers[key]);
+    var val = t.value;
+    memoTimers[key] = setTimeout(function(){ setMemo(n, w, val); saveLocal(); }, 500);
+  });
+  // 포커스를 떠나면 대기 없이 바로 저장
+  document.addEventListener("focusout", function(e){
+    var t = e.target;
+    if(!t.classList || !t.classList.contains("memo")) return;
+    var n = t.getAttribute("data-n"), w = t.getAttribute("data-w"), key = w + "|" + n;
+    clearTimeout(memoTimers[key]);
+    setMemo(n, w, t.value); saveLocal();
+  });
 
   function render(){ renderAll(); renderPicked(); }
 
@@ -844,6 +951,7 @@
     });
     VIEWS.forEach(function(x){ document.getElementById("v-" + x.id).hidden = (x.id !== v); });
     document.getElementById("past").hidden = (v !== "all");
+    if(v === "pick") autoGrowAll();   // 숨김 상태에서 못 잰 높이를 지금 다시 잡는다
   });
 
   /* ---------- 자정(KST) 갱신 ---------- */
