@@ -94,7 +94,19 @@
   .topic-h .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
 
   /* ---- competition ---- */
-  .c{padding:20px 0;border-bottom:1px solid var(--rule-2)}
+  .c{padding:20px 0;border-bottom:1px solid var(--rule-2);scroll-margin-top:72px}
+  /* 선택 후보에서 넘어왔을 때 어디로 왔는지 잠깐 짚어준다 */
+  .c.flash{animation:flash 1.8s ease-out}
+  @keyframes flash{
+    0%,25%{background:var(--both-bg);box-shadow:0 0 0 10px var(--both-bg)}
+    100%  {background:transparent;box-shadow:0 0 0 10px transparent}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .c.flash{animation:none;background:var(--both-bg);box-shadow:0 0 0 10px var(--both-bg)}
+  }
+  /* 선택 후보의 공모전명은 상세로 가는 내부 링크 */
+  .pick-row a[data-jump]{cursor:pointer}
+  .pick-row a[data-jump]:hover{text-decoration:underline}
   .c-head{display:grid;grid-template-columns:54px 1fr auto;gap:0 14px;align-items:start}
   .c-d{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
        font-size:16px;font-weight:600;text-align:right;padding-top:1px}
@@ -880,7 +892,7 @@
            '</h2><span class="n">' + items.length + '</span></div>';
       items.forEach(function(c){
         if(c.rolling || days(c.end) >= 0) open++;
-        h += '<article class="c"><div class="c-head">' + ddayHTML(c) +
+        h += '<article class="c" id="c-' + cid(c.name) + '"><div class="c-head">' + ddayHTML(c) +
              '<div><p class="c-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
              esc(c.name) + '</a></p><p class="c-org">' + esc(c.org) + '</p>' +
              dvChip(c.name) + whoHTML(c.name) + '</div>' +
@@ -927,7 +939,8 @@
           var theirMemo = both ? memoOf(c.name, other) : "";
 
           h += '<div class="pick-row' + (both?" both":"") + '">' + ddayHTML(c) +
-               '<div><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + '</a>' +
+               '<div><a href="#c-' + cid(c.name) + '" data-jump="' + esc(c.name) + '">' +
+               esc(c.name) + '</a>' +
                '<span class="sub2">' + (DELIVER[c.name] ? esc(DELIVER[c.name][0]) + ' · ' : '') +
                esc(c.prize) + '</span></div>' +
                (both ? '<span class="tag" data-w="both">둘 다</span>' : '<span></span>') +
@@ -1052,17 +1065,39 @@
     return '<button type="button" role="tab" data-v="' + v.id + '" aria-selected="' + (i===0) + '">' +
            v.label + '<span class="n"></span></button>';
   }).join("");
-  tabs.addEventListener("click", function(e){
-    var b = e.target.closest("button[data-v]");
-    if(!b) return;
+  function showView(v){
     closePop();
-    var v = b.getAttribute("data-v");
     Array.prototype.forEach.call(tabs.querySelectorAll("button"), function(x){
-      x.setAttribute("aria-selected", x === b ? "true" : "false");
+      x.setAttribute("aria-selected", x.getAttribute("data-v") === v ? "true" : "false");
     });
     VIEWS.forEach(function(x){ document.getElementById("v-" + x.id).hidden = (x.id !== v); });
     document.getElementById("past").hidden = (v !== "all");
     if(v === "pick") autoGrowAll();   // 숨김 상태에서 못 잰 높이를 지금 다시 잡는다
+  }
+  tabs.addEventListener("click", function(e){
+    var b = e.target.closest("button[data-v]");
+    if(!b) return;
+    showView(b.getAttribute("data-v"));
+  });
+
+  /* 선택 후보에서 공모전 이름을 누르면 공모전 탭의 해당 항목으로 이동 */
+  document.addEventListener("click", function(e){
+    var j = e.target.closest("[data-jump]");
+    if(!j) return;
+    e.preventDefault();
+    showView("all");
+    var el = document.getElementById("c-" + cid(j.getAttribute("data-jump")));
+    if(!el) return;
+
+    el.classList.remove("flash");
+    void el.offsetWidth;                 // 연속 클릭 시 애니메이션 다시 태우기
+    el.classList.add("flash");
+    setTimeout(function(){ el.classList.remove("flash"); }, 1800);
+
+    // 즉시 이동. smooth는 탭을 펼치며 레이아웃이 바뀌는 프레임에 걸면 취소되고,
+    // requestAnimationFrame으로 미루면 탭이 백그라운드일 때 콜백이 안 돌아 아예 안 움직인다.
+    // 동기 호출이 가장 확실하고, 어디로 왔는지는 위의 flash 하이라이트가 알려준다.
+    el.scrollIntoView({ behavior: "auto", block: "center" });
   });
 
   /* ---------- 자정(KST) 갱신 ---------- */
