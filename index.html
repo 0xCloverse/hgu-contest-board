@@ -15,6 +15,7 @@
     --tae:#2B5CA8;      --tae-bg:#E7EEF8;
     --jian:#A85B22;     --jian-bg:#F8EEE4;
     --both:#1E7A55;     --both-bg:#E2F1EA;
+    --skip:#7D8483;     --skip-bg:#ECEEED;
     --warn:#9A3B2F;
     --hot:#B3352A;
     --on-solid:#FFFFFF;
@@ -28,7 +29,8 @@
       --rule:#2A302E; --rule-2:#222826; --accent:#7FC3AC;
       --tae:#8FB6EC;  --tae-bg:#1A2634;
       --jian:#E0A06A; --jian-bg:#2E2318;
-      --both:#77CCA5; --both-bg:#152A22;
+      --both:#77CCA5; --both-bg:#1B3E31;
+      --skip:#8B9391; --skip-bg:#242A28;
       --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
       --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
       --dv-media:#C4A3E8; --dv-media-bg:#271E33;
@@ -40,7 +42,8 @@
     --rule:#2A302E; --rule-2:#222826; --accent:#7FC3AC;
     --tae:#8FB6EC;  --tae-bg:#1A2634;
     --jian:#E0A06A; --jian-bg:#2E2318;
-    --both:#77CCA5; --both-bg:#152A22;
+    --both:#77CCA5; --both-bg:#1B3E31;
+    --skip:#8B9391; --skip-bg:#242A28;
     --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
     --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
     --dv-media:#C4A3E8; --dv-media-bg:#271E33;
@@ -155,6 +158,15 @@
   }
   .pop button[aria-pressed="true"][data-p="tae"]  .box{background:var(--tae);border-color:var(--tae)}
   .pop button[aria-pressed="true"][data-p="jian"] .box{background:var(--jian);border-color:var(--jian)}
+  .pop button[data-p="skip"]{margin-top:4px;padding-top:11px;border-top:1px solid var(--rule-2);color:var(--ink-2)}
+  .pop button[aria-pressed="true"][data-p="skip"]{color:var(--skip)}
+  .pop button[aria-pressed="true"][data-p="skip"] .box{background:var(--skip);border-color:var(--skip)}
+
+  /* ---- 취소된 공모전 ---- */
+  .c[data-skip="1"]{opacity:.42;transition:opacity .15s}
+  .c[data-skip="1"]:hover{opacity:.8}
+  .c[data-skip="1"] .c-title a{text-decoration:line-through;text-decoration-color:var(--skip);text-decoration-thickness:1.5px}
+  .pickbtn[data-skip="1"]{color:var(--skip);border-color:var(--skip)}
 
   /* ---- who badges ---- */
   .who{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
@@ -165,6 +177,7 @@
   .tag[data-w="tae"] {background:var(--tae-bg); color:var(--tae)}
   .tag[data-w="jian"]{background:var(--jian-bg);color:var(--jian)}
   .tag[data-w="both"]{background:var(--both-bg);color:var(--both)}
+  .tag[data-w="skip"]{background:var(--skip-bg);color:var(--skip)}
 
   /* ---- details ---- */
   .c-body{margin-left:68px;margin-top:12px}
@@ -200,7 +213,7 @@
     display:grid;grid-template-columns:54px 1fr auto;gap:0 14px;align-items:center;
     padding:9px 11px;border-radius:6px;margin-left:-11px;
   }
-  .pick-row.both{background:var(--both-bg)}
+  .pick-row.both{background:var(--both-bg);box-shadow:inset 3px 0 0 var(--both)}
   .pick-row .c-d{font-size:14px}
   .pick-row.both .c-d{color:var(--both)}
   .pick-row a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
@@ -835,11 +848,28 @@
   }
 
   function picked(name, who){ var p = DATA.picks[cid(name)]; return !!(p && p[who]); }
+  function skipped(name){ var p = DATA.picks[cid(name)]; return !!(p && p.skip); }
+
+  // 취소와 개인 선택은 같이 설 수 없다 — 취소는 "둘 다 못 한다"는 뜻이라서
   function toggle(name, who){
     var k = cid(name);
     if(!DATA.picks[k]) DATA.picks[k] = {};
-    if(DATA.picks[k][who]){ delete DATA.picks[k][who]; push("/picks/"+k+"/"+who, null); }
-    else { DATA.picks[k][who] = true; push("/picks/"+k+"/"+who, true); }
+    var p = DATA.picks[k];
+    if(who === "skip"){
+      if(p.skip){ delete p.skip; push("/picks/"+k+"/skip", null); }
+      else{
+        PEOPLE.forEach(function(x){
+          if(p[x.id]){ delete p[x.id]; push("/picks/"+k+"/"+x.id, null); }
+        });
+        p.skip = true; push("/picks/"+k+"/skip", true);
+      }
+    } else {
+      if(p[who]){ delete p[who]; push("/picks/"+k+"/"+who, null); }
+      else{
+        if(p.skip){ delete p.skip; push("/picks/"+k+"/skip", null); }
+        p[who] = true; push("/picks/"+k+"/"+who, true);
+      }
+    }
     render();
   }
 
@@ -866,6 +896,7 @@
     return '<span class="dv" data-t="' + d[1] + '"><i>' + DTYPE_LABEL[d[1]] + '</i>' + esc(d[0]) + '</span>';
   }
   function whoHTML(name){
+    if(skipped(name)) return '<div class="who"><span class="tag" data-w="skip">취소</span></div>';
     var t = picked(name,"tae"), j = picked(name,"jian");
     if(!t && !j) return "";
     var h = '<div class="who">';
@@ -875,10 +906,11 @@
     return h + '</div>';
   }
   function pickBtn(name){
-    var t = picked(name,"tae"), j = picked(name,"jian");
-    var label = (t||j) ? "선택됨" : "선택";
+    var t = picked(name,"tae"), j = picked(name,"jian"), s = skipped(name);
+    var label = s ? "취소됨" : ((t||j) ? "선택됨" : "선택");
     return '<div class="pickwrap"><button class="pickbtn" type="button" data-pick="' + esc(name) +
-           '" data-has="' + ((t||j)?"1":"0") + '" aria-expanded="false">' + label + ' ▾</button></div>';
+           '" data-has="' + ((t||j||s)?"1":"0") + '" data-skip="' + (s?"1":"0") +
+           '" aria-expanded="false">' + label + ' ▾</button></div>';
   }
 
   var allEl = document.getElementById("v-all");
@@ -892,7 +924,8 @@
            '</h2><span class="n">' + items.length + '</span></div>';
       items.forEach(function(c){
         if(c.rolling || days(c.end) >= 0) open++;
-        h += '<article class="c" id="c-' + cid(c.name) + '"><div class="c-head">' + ddayHTML(c) +
+        h += '<article class="c" id="c-' + cid(c.name) + '"' + (skipped(c.name)?' data-skip="1"':'') +
+             '><div class="c-head">' + ddayHTML(c) +
              '<div><p class="c-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
              esc(c.name) + '</a></p><p class="c-org">' + esc(c.org) + '</p>' +
              dvChip(c.name) + whoHTML(c.name) + '</div>' +
@@ -1047,7 +1080,12 @@
         return '<button type="button" data-p="' + p.id + '" data-n="' + esc(name) +
                '" aria-pressed="' + (on?"true":"false") + '"><span class="box">' +
                (on?"✓":"") + '</span>' + p.name + '</button>';
-      }).join("");
+      }).join("") + (function(){
+        var on = skipped(name);
+        return '<button type="button" data-p="skip" data-n="' + esc(name) +
+               '" aria-pressed="' + (on?"true":"false") + '"><span class="box">' +
+               (on?"✕":"") + '</span>취소</button>';
+      })();
       btn.parentNode.appendChild(pop);
       btn.setAttribute("aria-expanded","true");
       return;
