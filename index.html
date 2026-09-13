@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>공모전 보드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,7 @@
     --both:#1E7A55;     --both-bg:#E2F1EA;
     --skip:#7D8483;     --skip-bg:#ECEEED;
     --warn:#9A3B2F;
-    --hot:#B3352A;
+    --hot:#B3352A;      --hot-bg:#FBEAE8;
     --on-solid:#FFFFFF;
     --dv-doc:#55606E;   --dv-doc-bg:#ECEFF2;
     --dv-media:#6B4A94; --dv-media-bg:#F0EAF7;
@@ -31,7 +32,7 @@
       --jian:#E0A06A; --jian-bg:#2E2318;
       --both:#77CCA5; --both-bg:#1B3E31;
       --skip:#8B9391; --skip-bg:#242A28;
-      --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
+      --warn:#E89185; --hot:#EE8B80; --hot-bg:#33211F; --on-solid:#111413;
       --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
       --dv-media:#C4A3E8; --dv-media-bg:#271E33;
       --dv-build:#7FC9AE; --dv-build-bg:#15291F;
@@ -44,7 +45,7 @@
     --jian:#E0A06A; --jian-bg:#2E2318;
     --both:#77CCA5; --both-bg:#1B3E31;
     --skip:#8B9391; --skip-bg:#242A28;
-    --warn:#E89185; --hot:#EE8B80; --on-solid:#111413;
+    --warn:#E89185; --hot:#EE8B80; --hot-bg:#33211F; --on-solid:#111413;
     --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
     --dv-media:#C4A3E8; --dv-media-bg:#271E33;
     --dv-build:#7FC9AE; --dv-build-bg:#15291F;
@@ -256,6 +257,67 @@
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .legend i{width:11px;height:11px;border-radius:3px;display:block}
 
+  /* ---- 최종 선택 ---- */
+  .fin-note{font-size:13px;color:var(--ink-2);margin:18px 0 14px}
+  .fin-note b{color:var(--both);font-weight:600}
+  .fin{
+    display:grid;grid-template-columns:54px 1fr;gap:0 14px;align-items:start;
+    padding:13px 11px;border-radius:6px;margin:0 0 8px -11px;
+    background:var(--both-bg);box-shadow:inset 3px 0 0 var(--both);
+  }
+  .fin .c-d{font-size:14px;color:var(--both)}
+  .fin a{color:var(--both);text-decoration:none;font-size:15px;font-weight:600}
+  .fin a:hover{text-decoration:underline}
+  .fin-org{display:block;font-size:11.5px;color:var(--ink-3);margin-top:1px}
+  .fin-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-2);margin-top:6px}
+
+  /* ---- 달력 ---- */
+  .cal,.ag{margin-top:34px}
+  .cal-h{display:flex;align-items:baseline;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+  .cal-h h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .cal-h .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
+  .cal-m{margin-top:22px}
+  .cal-m h3{
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;
+    color:var(--ink-2);margin:0 0 7px;letter-spacing:.03em;
+  }
+  .cal-g{
+    display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+    border-top:1px solid var(--rule);border-left:1px solid var(--rule-2);
+  }
+  .cal-w{
+    font-size:10.5px;color:var(--ink-3);text-align:center;padding:5px 0;
+    border-right:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2);
+  }
+  .cal-d{
+    min-height:76px;padding:4px 4px 6px;overflow:hidden;
+    border-right:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2);
+  }
+  .cal-d .dn{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);display:block}
+  .cal-d.off{background:var(--rule-2);opacity:.3}
+  .cal-d.was .dn{opacity:.5}
+  .cal-d.was .ev{opacity:.45}
+  .cal-d.now{box-shadow:inset 0 0 0 2px var(--accent)}
+  .cal-d.now .dn{color:var(--accent);font-weight:700}
+  .ev{
+    display:block;margin-top:3px;padding:2px 4px;border-radius:3px;
+    font-size:10.5px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .ev b{font-weight:600}
+  .ev[data-k="end"]  {background:var(--hot-bg);color:var(--hot)}
+  .ev[data-k="sched"]{background:var(--rule-2);color:var(--ink-2)}
+
+  /* ---- 일정 목록 ---- */
+  .ag-row{
+    display:grid;grid-template-columns:72px 1fr;gap:0 14px;
+    padding:9px 0;border-bottom:1px solid var(--rule-2);
+  }
+  .ag-row.was{opacity:.4}
+  .ag-d{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-2);padding-top:1px}
+  .ag-row[data-k="end"] .ag-d{color:var(--hot);font-weight:600}
+  .ag-t{font-size:13.5px;color:var(--ink)}
+  .ag-c{display:block;font-size:11.5px;color:var(--ink-3);margin-top:1px}
+
   /* ---- past ---- */
   details.past{margin-top:44px;border-top:1px solid var(--rule);padding-top:16px}
   details.past summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink-2)}
@@ -273,9 +335,17 @@
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
   @media (max-width:600px){
-    .c-head,.pick-row{grid-template-columns:46px 1fr}
+    .c-head,.pick-row,.fin{grid-template-columns:46px 1fr}
     .pickwrap{grid-column:1/-1;margin-top:8px}
     .pop{right:auto;left:0}
+    /* 좁은 화면에선 칸에 글자가 안 들어간다. 점으로만 찍고 상세는 아래 일정 목록에서 읽는다 */
+    .cal-d{min-height:48px;padding:3px 2px 4px}
+    .ev{
+      display:inline-block;width:7px;height:7px;padding:0;margin:3px 2px 0 0;
+      border-radius:50%;font-size:0;line-height:0;
+    }
+    .ev[data-k="end"]  {background:var(--hot)}
+    .ev[data-k="sched"]{background:var(--ink-3)}
   }
 </style>
 
@@ -302,6 +372,8 @@
     </div>
     <div id="picked"></div>
   </section>
+
+  <section id="v-final" role="tabpanel" hidden></section>
 
   <details class="past" id="past">
     <summary>올해는 끝났지만 내년에 노릴 것</summary>
@@ -1066,7 +1138,176 @@
     setMemo(n, w, t.value); saveLocal();
   });
 
-  function render(){ renderAll(); renderPicked(); }
+  /* ---------- 최종 선택 ---------- */
+  var finalEl = document.getElementById("v-final");
+  var WD = ["일","월","화","수","목","금","토"];
+
+  function agreed(){
+    return C.filter(function(c){
+      return picked(c.name,"tae") && picked(c.name,"jian") && !skipped(c.name);
+    }).sort(function(a,b){ return a.end - b.end; });
+  }
+
+  // 달력 칸에 들어갈 짧은 이름. 괄호 브랜드(=BLOCK AI 26, iM뱅크)가 있으면 그걸 쓰고,
+  // 없으면 연도·회차·"공모전" 같은 꼬리를 떼어낸다.
+  function shortName(name){
+    var m = name.match(/^[(（]([^)）]{3,20})[)）]/) || name.match(/[(（]([^)）]{3,20})[)）]\s*$/);
+    var s = m ? m[1]
+              : name.replace(/^\s*[\[［][^\]］]*[\]］]\s*/, "")   // 앞에 붙은 [주최] 꼬리표
+                    .replace(/\s*20\d\d년?\s*/, " ").replace(/제\s*\d+\s*회\s*/, "");
+    s = s.replace(/\s*(공모전|경진대회|해커톤|챌린지|대회|공모)\s*$/, "").trim();
+    return s.length > 13 ? s.slice(0,13) + "…" : s;
+  }
+
+  function dayKey(dt){ return dt.getUTCFullYear()*10000 + (dt.getUTCMonth()+1)*100 + dt.getUTCDate(); }
+  function calDate(mo, da){
+    if(!(mo >= 1 && mo <= 12 && da >= 1 && da <= 31)) return null;
+    var dt = new Date(Date.UTC(Y, mo-1, da));
+    return dt.getUTCMonth() === mo-1 ? dt : null;   // 9/31 같은 값 걸러내기
+  }
+
+  var RANGE_RE = /(\d{1,2})\s*\/\s*(\d{1,2})\s*[~\-–]\s*(?:(\d{1,2})\s*\/\s*)?(\d{1,2})(?!\s*[\/:])/;
+  var ONE_RE   = /(\d{1,2})\s*\/\s*(\d{1,2})/;
+
+  function labelOf(s){
+    return s.replace(/\d{1,2}\s*\/\s*\d{1,2}/g, " ")          // 남은 날짜
+            .replace(/\d{1,2}\s*:\s*\d{2}/g, " ")             // 시각
+            .replace(/[(（]\s*[월화수목금토일]\s*[)）]/g, " ")  // 요일
+            .replace(/\s+/g, " ").replace(/^[~\-–,\s]+/, "").trim();
+  }
+
+  // 마감일(c.end)은 구조화된 값이라 늘 정확하고, 나머지는 c.sched 문장에서 날짜를 긁어온다.
+  function eventsOf(c){
+    var out = [], endKey = null;
+    if(!c.rolling && c.end){
+      endKey = dayKey(c.end);
+      out.push({ d:c.end, k:"end", t:"접수 마감", c:c });
+    }
+    if(!c.sched) return out;
+
+    c.sched.split("→").forEach(function(seg){
+      var s, e = null, rest, m = seg.match(RANGE_RE);
+      if(m){
+        s = calDate(+m[1], +m[2]);
+        e = calDate(+(m[3] || m[1]), +m[4]);
+      } else {
+        m = seg.match(ONE_RE);
+        if(!m) return;
+        s = calDate(+m[1], +m[2]);
+      }
+      if(!s) return;
+      rest = seg.replace(m[0], " ");
+      var t = labelOf(rest);
+      if(!t) return;
+
+      function put(dt){
+        if(endKey !== null && dayKey(dt) === endKey) return;  // 마감일과 겹치면 구조화된 쪽을 남긴다
+        out.push({ d:dt, k:"sched", t:t, c:c });
+      }
+      put(s);
+      // 본선 1박2일처럼 짧은 구간은 하루씩 다 찍고, 47일 멘토링 같은 긴 구간은 시작만 찍는다
+      if(e && e > s && (e - s) <= 6*86400000){
+        for(var t2 = s.getTime() + 86400000; t2 <= e.getTime(); t2 += 86400000) put(new Date(t2));
+      }
+    });
+    return out;
+  }
+
+  function finRow(c){
+    var h = '<div class="fin">' + ddayHTML(c) +
+            '<div><a href="#c-' + cid(c.name) + '" data-jump="' + esc(c.name) + '">' +
+            esc(c.name) + '</a><span class="fin-org">' + esc(c.org) + '</span>' +
+            dvChip(c.name) + '<div class="fin-meta">' + esc(c.prize) + '</div>';
+    PEOPLE.forEach(function(p){
+      var t = memoOf(c.name, p.id);
+      if(!t) return;
+      h += '<div class="memo-line peer"><span class="memo-tag" data-w="' + p.id + '">' +
+           esc(p.name) + '</span><span class="memo-text">' + esc(t) + '</span></div>';
+    });
+    return h + '</div></div>';
+  }
+
+  function calHTML(evs){
+    var byDay = {};
+    evs.forEach(function(e){ (byDay[dayKey(e.d)] = byDay[dayKey(e.d)] || []).push(e); });
+
+    // 이번 달부터 마지막 일정이 있는 달까지 (넉넉잡아 12개월로 자른다)
+    var lo = KP.y*12 + (KP.m-1), hi = lo;
+    evs.forEach(function(e){
+      var n = e.d.getUTCFullYear()*12 + e.d.getUTCMonth();
+      if(n < lo) lo = n;
+      if(n > hi) hi = n;
+    });
+    if(hi - lo > 11) hi = lo + 11;
+
+    var todayKey = dayKey(TODAY);
+    var h = '<div class="cal"><div class="cal-h"><h2>일정 달력</h2>' +
+            '<span class="n">' + evs.length + '개 일정</span></div>' +
+            '<div class="legend"><span><i style="background:var(--hot)"></i>접수 마감</span>' +
+            '<span><i style="background:var(--ink-3)"></i>심사 · 행사 일정</span></div>';
+
+    for(var n = lo; n <= hi; n++){
+      var y = Math.floor(n/12), m = n % 12;
+      h += '<div class="cal-m"><h3>' + y + '. ' + (m+1 < 10 ? "0" : "") + (m+1) + '</h3><div class="cal-g">';
+      WD.forEach(function(w){ h += '<div class="cal-w">' + w + '</div>'; });
+
+      var lead = new Date(Date.UTC(y, m, 1)).getUTCDay();
+      var len  = new Date(Date.UTC(y, m+1, 0)).getUTCDate();
+      for(var b = 0; b < lead; b++) h += '<div class="cal-d off"></div>';
+
+      for(var dd = 1; dd <= len; dd++){
+        var k = y*10000 + (m+1)*100 + dd;
+        h += '<div class="cal-d' + (k === todayKey ? " now" : "") + (k < todayKey ? " was" : "") +
+             '"><span class="dn">' + dd + '</span>';
+        (byDay[k] || []).forEach(function(e){
+          h += '<span class="ev" data-k="' + e.k + '" title="' + esc(e.c.name + " — " + e.t) +
+               '"><b>' + esc(shortName(e.c.name)) + '</b> ' + esc(e.t) + '</span>';
+        });
+        h += '</div>';
+      }
+      for(var tail = (lead + len) % 7; tail > 0 && tail < 7; tail++) h += '<div class="cal-d off"></div>';
+      h += '</div></div>';
+    }
+    return h + '</div>';
+  }
+
+  function agendaHTML(evs){
+    var todayKey = dayKey(TODAY);
+    var h = '<div class="ag"><div class="cal-h"><h2>일정 목록</h2>' +
+            '<span class="n">지난 일정은 흐리게</span></div>';
+    evs.forEach(function(e){
+      h += '<div class="ag-row' + (dayKey(e.d) < todayKey ? " was" : "") + '" data-k="' + e.k + '">' +
+           '<span class="ag-d">' + md(e.d) + ' (' + WD[e.d.getUTCDay()] + ')</span>' +
+           '<span class="ag-t">' + esc(e.t) +
+           '<span class="ag-c">' + esc(e.c.name) + '</span></span></div>';
+    });
+    return h + '</div>';
+  }
+
+  function renderFinal(){
+    var list = agreed();
+    var badge = document.querySelector('#tabs [data-v="final"] .n');
+    if(badge) badge.textContent = list.length;
+
+    if(!list.length){
+      finalEl.innerHTML = '<p class="empty">아직 두 사람이 함께 고른 공모전이 없습니다. ' +
+        '「선택 후보」 탭에서 태영·지안이 같은 공모전을 고르면 여기로 모이고, 일정이 달력에 표시됩니다.</p>';
+      return;
+    }
+
+    var evs = [];
+    list.forEach(function(c){ evs = evs.concat(eventsOf(c)); });
+    evs.sort(function(a,b){ return (a.d - b.d) || (a.k === "end" ? -1 : 1); });
+
+    var h = '<p class="fin-note">태영·지안이 <b>둘 다 고른 ' + list.length + '건</b>입니다. ' +
+            '아래 달력과 목록은 이 ' + list.length + '건의 일정만 모아 보여줍니다.</p>';
+    list.forEach(function(c){ h += finRow(c); });
+    finalEl.innerHTML = h + calHTML(evs) + agendaHTML(evs) +
+      '<p class="fin-note" style="margin-top:22px">달력의 회색 일정은 각 공고의 일정 문구에서 자동으로 뽑아낸 값입니다. ' +
+      '접수 전에는 공고 원문을 다시 확인하세요.</p>';
+  }
+
+  function render(){ renderAll(); renderPicked(); renderFinal(); }
 
   /* ---------- 선택 팝오버 ---------- */
   function closePop(){
@@ -1111,7 +1352,7 @@
   document.addEventListener("keydown", function(e){ if(e.key === "Escape") closePop(); });
 
   /* ---------- 탭 ---------- */
-  var VIEWS = [{id:"all", label:"공모전"}, {id:"pick", label:"선택 후보"}];
+  var VIEWS = [{id:"all", label:"공모전"}, {id:"pick", label:"선택 후보"}, {id:"final", label:"최종 선택"}];
   var tabs = document.getElementById("tabs");
   tabs.innerHTML = VIEWS.map(function(v,i){
     return '<button type="button" role="tab" data-v="' + v.id + '" aria-selected="' + (i===0) + '">' +
