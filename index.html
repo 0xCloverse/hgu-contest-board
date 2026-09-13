@@ -23,6 +23,9 @@
     --dv-doc:#55606E;   --dv-doc-bg:#ECEFF2;
     --dv-media:#6B4A94; --dv-media-bg:#F0EAF7;
     --dv-build:#1F6B57; --dv-build-bg:#E3F0EB;
+    /* 달력에서 공모전을 구분하는 색. 순서대로 돌아가며 배정된다 */
+    --e1:#2B6CB0; --e2:#B05423; --e3:#2F7A55;
+    --e4:#8B4A9C; --e5:#A03A4E; --e6:#4A6572;
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
@@ -36,6 +39,8 @@
       --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
       --dv-media:#C4A3E8; --dv-media-bg:#271E33;
       --dv-build:#7FC9AE; --dv-build-bg:#15291F;
+      --e1:#7FB3EC; --e2:#E3A46E; --e3:#77CCA5;
+      --e4:#C9A0E0; --e5:#E58A9C; --e6:#9FB4C0;
     }
   }
   :root[data-theme="dark"]{
@@ -49,6 +54,8 @@
     --dv-doc:#A7B1BD;   --dv-doc-bg:#232A31;
     --dv-media:#C4A3E8; --dv-media-bg:#271E33;
     --dv-build:#7FC9AE; --dv-build-bg:#15291F;
+    --e1:#7FB3EC; --e2:#E3A46E; --e3:#77CCA5;
+    --e4:#C9A0E0; --e5:#E58A9C; --e6:#9FB4C0;
   }
 
   *{box-sizing:border-box}
@@ -304,17 +311,41 @@
     font-size:10.5px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
   .ev b{font-weight:600}
-  .ev[data-k="end"]  {background:var(--hot-bg);color:var(--hot)}
-  .ev[data-k="sched"]{background:var(--rule-2);color:var(--ink-2)}
+  /* 색(--c)은 공모전별로 인라인 지정. 꽉 찬 칩이 접수 마감, 옅은 칩이 나머지 일정 */
+  .ev[data-k="end"]{background:var(--c);color:var(--on-solid)}
+  .ev[data-k="sched"]{
+    background:var(--rule-2);                              /* color-mix 미지원 대비 */
+    background:color-mix(in srgb, var(--c) 16%, transparent);
+    color:var(--c);
+  }
+
+  /* ---- 달력 넘기기 ---- */
+  .cal-nav{display:flex;align-items:center;gap:10px;margin-top:16px}
+  .cal-b{
+    width:30px;height:30px;flex:none;border-radius:6px;border:1px solid var(--rule);
+    background:var(--card);color:var(--ink-2);cursor:pointer;
+    font:600 15px/1 "IBM Plex Mono",monospace;
+  }
+  .cal-b:hover:not(:disabled){border-color:var(--ink-3);color:var(--ink)}
+  .cal-b:disabled{opacity:.3;cursor:default}
+  .cal-t{
+    font-family:"IBM Plex Mono",monospace;font-size:14.5px;font-weight:600;
+    color:var(--ink);min-width:78px;text-align:center;
+  }
+  .cal-i{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);margin-left:auto}
+  .cal-leg{margin-top:14px}
+  .cal-leg i{border-radius:3px}
 
   /* ---- 일정 목록 ---- */
   .ag-row{
     display:grid;grid-template-columns:72px 1fr;gap:0 14px;
-    padding:9px 0;border-bottom:1px solid var(--rule-2);
+    padding:9px 0 9px 11px;border-bottom:1px solid var(--rule-2);
+    border-left:3px solid var(--c);
   }
   .ag-row.was{opacity:.4}
   .ag-d{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-2);padding-top:1px}
-  .ag-row[data-k="end"] .ag-d{color:var(--hot);font-weight:600}
+  .ag-row[data-k="end"] .ag-d{color:var(--c);font-weight:600}
+  .ag-row[data-k="end"] .ag-t{font-weight:600}
   .ag-t{font-size:13.5px;color:var(--ink)}
   .ag-c{display:block;font-size:11.5px;color:var(--ink-3);margin-top:1px}
 
@@ -344,8 +375,8 @@
       display:inline-block;width:7px;height:7px;padding:0;margin:3px 2px 0 0;
       border-radius:50%;font-size:0;line-height:0;
     }
-    .ev[data-k="end"]  {background:var(--hot)}
-    .ev[data-k="sched"]{background:var(--ink-3)}
+    .ev[data-k="end"]  {background:var(--c)}
+    .ev[data-k="sched"]{background:var(--c);opacity:.45}
   }
 </style>
 
@@ -1141,6 +1172,8 @@
   /* ---------- 최종 선택 ---------- */
   var finalEl = document.getElementById("v-final");
   var WD = ["일","월","화","수","목","금","토"];
+  var PAL = 6;            // --e1 ~ --e6
+  var calMonth = null;    // 지금 보고 있는 달(y*12+m). 넘겨 본 위치를 재렌더 후에도 유지한다
 
   function agreed(){
     return C.filter(function(c){
@@ -1227,7 +1260,7 @@
     return h + '</div></div>';
   }
 
-  function calHTML(evs){
+  function calHTML(evs, list, col){
     var byDay = {};
     evs.forEach(function(e){ (byDay[dayKey(e.d)] = byDay[dayKey(e.d)] || []).push(e); });
 
@@ -1240,43 +1273,63 @@
     });
     if(hi - lo > 11) hi = lo + 11;
 
+    // 한 달만 그린다. 넘겨 본 달은 기억해 두되, 범위 밖으로 나가면 끌어당긴다
+    if(calMonth === null) calMonth = KP.y*12 + (KP.m-1);
+    if(calMonth < lo) calMonth = lo;
+    if(calMonth > hi) calMonth = hi;
+
+    var y = Math.floor(calMonth/12), m = calMonth % 12;
+    var lead = new Date(Date.UTC(y, m, 1)).getUTCDay();
+    var len  = new Date(Date.UTC(y, m+1, 0)).getUTCDate();
+    var mine = evs.filter(function(e){
+      return e.d.getUTCFullYear()*12 + e.d.getUTCMonth() === calMonth;
+    }).length;
     var todayKey = dayKey(TODAY);
+
     var h = '<div class="cal"><div class="cal-h"><h2>일정 달력</h2>' +
-            '<span class="n">' + evs.length + '개 일정</span></div>' +
-            '<div class="legend"><span><i style="background:var(--hot)"></i>접수 마감</span>' +
-            '<span><i style="background:var(--ink-3)"></i>심사 · 행사 일정</span></div>';
+            '<span class="n">전체 ' + evs.length + '개 일정</span></div>' +
+            '<div class="cal-nav">' +
+            '<button type="button" class="cal-b" data-cal="-1" aria-label="이전 달"' +
+            (calMonth <= lo ? " disabled" : "") + '>‹</button>' +
+            '<span class="cal-t">' + y + '. ' + (m+1 < 10 ? "0" : "") + (m+1) + '</span>' +
+            '<button type="button" class="cal-b" data-cal="1" aria-label="다음 달"' +
+            (calMonth >= hi ? " disabled" : "") + '>›</button>' +
+            '<span class="cal-i">이 달 ' + mine + '건 · ' + (calMonth-lo+1) + '/' + (hi-lo+1) + '</span>' +
+            '</div>';
 
-    for(var n = lo; n <= hi; n++){
-      var y = Math.floor(n/12), m = n % 12;
-      h += '<div class="cal-m"><h3>' + y + '. ' + (m+1 < 10 ? "0" : "") + (m+1) + '</h3><div class="cal-g">';
-      WD.forEach(function(w){ h += '<div class="cal-w">' + w + '</div>'; });
+    h += '<div class="legend cal-leg">';
+    list.forEach(function(c){
+      h += '<span><i style="background:var(--e' + col[cid(c.name)] + ')"></i>' +
+           esc(shortName(c.name)) + '</span>';
+    });
+    h += '</div>';
 
-      var lead = new Date(Date.UTC(y, m, 1)).getUTCDay();
-      var len  = new Date(Date.UTC(y, m+1, 0)).getUTCDate();
-      for(var b = 0; b < lead; b++) h += '<div class="cal-d off"></div>';
+    h += '<div class="cal-m"><div class="cal-g">';
+    WD.forEach(function(w){ h += '<div class="cal-w">' + w + '</div>'; });
+    for(var b = 0; b < lead; b++) h += '<div class="cal-d off"></div>';
 
-      for(var dd = 1; dd <= len; dd++){
-        var k = y*10000 + (m+1)*100 + dd;
-        h += '<div class="cal-d' + (k === todayKey ? " now" : "") + (k < todayKey ? " was" : "") +
-             '"><span class="dn">' + dd + '</span>';
-        (byDay[k] || []).forEach(function(e){
-          h += '<span class="ev" data-k="' + e.k + '" title="' + esc(e.c.name + " — " + e.t) +
-               '"><b>' + esc(shortName(e.c.name)) + '</b> ' + esc(e.t) + '</span>';
-        });
-        h += '</div>';
-      }
-      for(var tail = (lead + len) % 7; tail > 0 && tail < 7; tail++) h += '<div class="cal-d off"></div>';
-      h += '</div></div>';
+    for(var dd = 1; dd <= len; dd++){
+      var k = y*10000 + (m+1)*100 + dd;
+      h += '<div class="cal-d' + (k === todayKey ? " now" : "") + (k < todayKey ? " was" : "") +
+           '"><span class="dn">' + dd + '</span>';
+      (byDay[k] || []).forEach(function(e){
+        h += '<span class="ev" data-k="' + e.k + '" style="--c:var(--e' + col[cid(e.c.name)] + ')"' +
+             ' title="' + esc(e.c.name + " — " + e.t) +
+             '"><b>' + esc(shortName(e.c.name)) + '</b> ' + esc(e.t) + '</span>';
+      });
+      h += '</div>';
     }
-    return h + '</div>';
+    for(var tail = (lead + len) % 7; tail > 0 && tail < 7; tail++) h += '<div class="cal-d off"></div>';
+    return h + '</div></div></div>';
   }
 
-  function agendaHTML(evs){
+  function agendaHTML(evs, col){
     var todayKey = dayKey(TODAY);
     var h = '<div class="ag"><div class="cal-h"><h2>일정 목록</h2>' +
             '<span class="n">지난 일정은 흐리게</span></div>';
     evs.forEach(function(e){
-      h += '<div class="ag-row' + (dayKey(e.d) < todayKey ? " was" : "") + '" data-k="' + e.k + '">' +
+      h += '<div class="ag-row' + (dayKey(e.d) < todayKey ? " was" : "") + '" data-k="' + e.k +
+           '" style="--c:var(--e' + col[cid(e.c.name)] + ')">' +
            '<span class="ag-d">' + md(e.d) + ' (' + WD[e.d.getUTCDay()] + ')</span>' +
            '<span class="ag-t">' + esc(e.t) +
            '<span class="ag-c">' + esc(e.c.name) + '</span></span></div>';
@@ -1299,12 +1352,16 @@
     list.forEach(function(c){ evs = evs.concat(eventsOf(c)); });
     evs.sort(function(a,b){ return (a.d - b.d) || (a.k === "end" ? -1 : 1); });
 
+    // 마감 빠른 순으로 색을 하나씩 배정한다 (6개를 넘기면 다시 처음 색으로 돈다)
+    var col = {};
+    list.forEach(function(c, i){ col[cid(c.name)] = (i % PAL) + 1; });
+
     var h = '<p class="fin-note">태영·지안이 <b>둘 다 고른 ' + list.length + '건</b>입니다. ' +
             '아래 달력과 목록은 이 ' + list.length + '건의 일정만 모아 보여줍니다.</p>';
     list.forEach(function(c){ h += finRow(c); });
-    finalEl.innerHTML = h + calHTML(evs) + agendaHTML(evs) +
-      '<p class="fin-note" style="margin-top:22px">달력의 회색 일정은 각 공고의 일정 문구에서 자동으로 뽑아낸 값입니다. ' +
-      '접수 전에는 공고 원문을 다시 확인하세요.</p>';
+    finalEl.innerHTML = h + calHTML(evs, list, col) + agendaHTML(evs, col) +
+      '<p class="fin-note" style="margin-top:22px">달력에서 <b>꽉 찬 칩이 접수 마감</b>, 옅은 칩이 심사·행사 일정입니다. ' +
+      '옅은 칩은 각 공고의 일정 문구에서 자동으로 뽑아낸 값이니 접수 전에는 공고 원문을 다시 확인하세요.</p>';
   }
 
   function render(){ renderAll(); renderPicked(); renderFinal(); }
@@ -1372,6 +1429,32 @@
     if(!b) return;
     showView(b.getAttribute("data-v"));
   });
+
+  /* ---------- 달력 달 넘기기 ---------- */
+  function calStep(dir){
+    var b = finalEl.querySelector('[data-cal="' + dir + '"]');
+    if(!b || b.disabled) return;      // 범위 끝에서는 움직이지 않는다
+    calMonth += dir;
+    renderFinal();
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-cal]");
+    if(b && !b.disabled) calStep(+b.getAttribute("data-cal"));
+  });
+
+  // 손가락으로 옆으로 밀어서 넘기기. 세로 스크롤과 헷갈리지 않게 가로 이동이 더 클 때만 먹는다
+  var swX = null, swY = null;
+  document.addEventListener("touchstart", function(e){
+    var t = e.changedTouches[0];
+    swX = e.target.closest(".cal") ? t.clientX : null;
+    swY = t.clientY;
+  }, {passive:true});
+  document.addEventListener("touchend", function(e){
+    if(swX === null) return;
+    var dx = e.changedTouches[0].clientX - swX, dy = e.changedTouches[0].clientY - swY;
+    swX = null;
+    if(Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy)) calStep(dx < 0 ? 1 : -1);
+  }, {passive:true});
 
   /* 선택 후보에서 공모전 이름을 누르면 공모전 탭의 해당 항목으로 이동 */
   document.addEventListener("click", function(e){
