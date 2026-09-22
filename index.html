@@ -424,6 +424,7 @@
   .conf-title a:hover{border-bottom-color:var(--ink-3)}
   .conf-org{font-size:12.5px;color:var(--ink-3);margin:3px 0 0}
   .conf-theme{font-size:13px;color:var(--ink-2);margin:9px 0 0;padding-left:11px;border-left:2px solid var(--rule)}
+  .topic-note{font-size:13px;color:var(--ink-2);margin:10px 0 0;max-width:68ch}
 
   /* 학술대회 진행 단계 — 초록 접수 → 전문 접수 → 개최일 순서를 그대로 보여준다 */
   .tl{position:relative;display:flex;gap:4px;margin-top:18px}
@@ -965,9 +966,94 @@
   var DTYPE_LABEL = { doc:"문서", media:"미디어", build:"구현" };
 
   /* ---------- 학술대회 (태영 개인 프로젝트 — 공모전 픽·합의 로직과 무관) ---------- */
+  var CONF_GROUPS = [
+    { id:"mgmt",  label:"경영·기술경영 학회 · 10월 마감",
+      note:"이번 주제와 결이 가장 맞고 일정도 여유 있는 곳입니다. 지능정보시스템학회는 초록만으로 발표할 수 있어 첫 논문으로 가장 현실적입니다." },
+    { id:"it",    label:"IT 학회 대학생 부문 · 10월 말 마감",
+      note:"경영 학회는 아니지만 학부생끼리 겨루는 대학생논문경진대회 부문이 따로 있고, 분량이 짧아 부담이 적습니다." },
+    { id:"tight", label:"9월 마감 · 일정 타이트",
+      note:"주제는 맞지만 마감이 이번 주~다음 주라 지금부터 쓰기엔 빠듯합니다." }
+  ];
+
   var CONF = [
+    /* ============ 경영·기술경영 ============ */
     {
-      name:"2026년 한국경영정보학회 추계학술대회", pick:true,
+      g:"mgmt", name:"2026 한국지능정보시스템학회 추계학술대회", pick:true,
+      org:"한국지능정보시스템학회",
+      theme:"북극항로 시대를 여는 해양산업의 인공지능대전환",
+      stages:[
+        { label:"초록(Extended Abstract) 마감", date:d(10,16) },
+        { label:"전문 제출 마감 (선택)", date:d(10,30) },
+        { label:"학술대회 발표", date:d(11,20) }
+      ],
+      who:"연구자·실무자·대학원생 대상 공고 — 학부생을 제한하는 문구는 없음 (교수님 공저로 제출하면 무리 없음)",
+      format:"논문 초록(Extended Abstract)만으로 발표 가능. 전문(Full Paper)은 우수논문 심사·학술지 Fast Track·프로시딩 전문 게재를 원할 때만 제출. 구두·포스터 발표.",
+      fields:"특별 분야는 해양산업 AI·AX. 일반 분야에 Big Data Analytics / Data-Driven Customer Experience / Intelligent Systems in Business / e-Commerce / Digital Finance and Assets / Cryptocurrency and Blockchain / Web and Social Media Mining 등",
+      place:"부산항국제전시컨벤션센터 · 11/19(목) 저녁 초청특강·환영만찬, 11/20(금) 논문발표",
+      contact:"한국지능정보시스템학회 사무국 류진환 사무국장 · 02-3295-0997 · office@kiiss.or.kr",
+      fit:"메인 테마는 해양산업이지만 일반 모집 분야에 'Cryptocurrency and Blockchain', 'Data-Driven Customer Experience', 'Intelligent Systems in Business'가 명시돼 있어 팬 멤버십 투표 설계 주제가 그대로 들어갑니다. 초록만으로 발표할 수 있어 부담이 가장 적고, 포항에서 부산은 당일 이동이 됩니다.",
+      warn:"우수논문 10편 내외는 학술지 「지능정보연구」 Fast Track 심사로 이어집니다. 지난해에는 초록 마감이 한 차례 연장됐지만, 연장을 기대하지 말고 10/16에 맞추세요.",
+      url:"https://kiiss.or.kr/"
+    },
+    {
+      g:"mgmt", name:"2026 한국기술혁신학회 추계학술대회",
+      org:"한국기술혁신학회",
+      theme:"전환기 혁신 거버넌스의 방향: 국정 가치의 변화와 과학기술혁신정책의 과제 (안)",
+      stages:[
+        { label:"발표 신청 마감", date:d(10,12) },
+        { label:"논문 제출 마감", date:d(10,26) },
+        { label:"학술대회 개최", date:d(11,4), disp:"11/4(수)~7(토)" }
+      ],
+      who:"공고에 별도 제한 명시 없음 — 학부생 발표 규정은 공고 첨부 CFP 확인 필요",
+      format:"발표 신청(8/31~10/12) 후 논문 제출(10/13~10/26). 분과별 발표·토론.",
+      fields:"과학기술혁신정책·기술경영 전반 (분과별 발표). 세부 분과는 공고 첨부 CFP 참조",
+      place:"한화리조트 제주 · 11/4(수) 분과 발표 ~ 11/7(토) 폐회",
+      contact:"한국기술혁신학회 사무국 · 010-9925-0786 · kotis@innovation.or.kr",
+      fit:"기술경영·혁신정책 분야를 대표하는 학회라 KAIST 기술경영학부 지원서에 가장 직접적으로 이어지는 실적입니다. 올해 주제가 혁신 거버넌스 쪽이라 '블록체인 기반 팬 거버넌스의 투표 설계'처럼 거버넌스 관점으로 제목을 잡으면 결이 맞습니다.",
+      warn:"제주 4일 행사라 이동·숙박 부담이 있습니다. 학부생 발표 가능 여부는 공고 첨부 CFP나 사무국에 먼저 확인하세요.",
+      url:"https://innovation.jams.or.kr/co/com/EgovMenu.kci?s_url=/ac/conference/main/jmMain.kci&s_MenuId=MENU-000000000030000&accnId=AC0000000022"
+    },
+
+    /* ============ IT 학회 대학생 부문 ============ */
+    {
+      g:"it", name:"2026 한국정보기술학회 추계종합학술대회 및 대학생논문경진대회",
+      org:"한국정보기술학회",
+      stages:[
+        { label:"논문 투고 마감", date:d(10,23) },
+        { label:"등록비 납부 마감", date:d(11,10) },
+        { label:"학술대회 발표", date:d(11,26), disp:"11/26(목)~27(금)" }
+      ],
+      who:"대학생논문경진대회 부문 별도 운영 · 회원/비회원 구분 없음",
+      format:"구두 · 포스터 · 온라인 중 선택. 온라인은 채택 후 3~5분 영상 제출 + 당일 zoom 질의응답. 대학생부문 등록비 오프라인 13만원 / 온라인 8만원.",
+      fields:"ICT 관련 전 분야 및 캡스톤 디자인 작품",
+      place:"메종글래드 제주 · 발표 11/26(목) 오후, 27(금) 전일 (온라인 참여 가능)",
+      contact:"한국정보기술학회 사무국 · 042-488-2015 · kiit@ki-it.or.kr",
+      fit:"경영 학회가 아니라 IT 학회라 결은 다르지만, 대학생 부문이라 학부생끼리 겨루고 온라인 발표로 제주에 가지 않아도 됩니다. 마감도 10/23로 여유가 있습니다.",
+      warn:"등록비는 11/10(화)까지 내야 하고, 논문 1편당 저자 1명의 발표 등록이 필수입니다.",
+      url:"https://ki-it.or.kr/conference/fallconf26"
+    },
+    {
+      g:"it", name:"2026 한국디지털콘텐츠학회 추계종합학술대회 및 대학생논문경진대회",
+      org:"한국디지털콘텐츠학회",
+      theme:"Agentic AI 시대, 디지털 콘텐츠의 새로운 패러다임",
+      stages:[
+        { label:"논문 제출 마감", date:d(10,26) },
+        { label:"사전등록 마감", date:d(11,2) },
+        { label:"학술대회 개최", date:d(11,19), disp:"11/19(목)~20(금)" }
+      ],
+      who:"대학생논문경진대회 부문 별도 운영 (대학생은 포스터 발표)",
+      format:"학회 양식 1~2쪽 논문. 채택 통보는 10/5부터 제출 순서대로 발송. 대학생 등록비 6만원.",
+      fields:"대학생 부문은 ICT 관련 전 분야 및 캡스톤디자인 작품 (일반 분과도 분야 제한 없음)",
+      place:"수원컨벤션센터 · 11/19(목)~20(금)",
+      contact:"한국디지털콘텐츠학회 사무국 · 042-484-3233 · dcs1@dcs.or.kr",
+      fit:"1~2쪽이면 되는 가장 가벼운 선택지이고 등록비도 6만원입니다. 팬 멤버십을 디지털 콘텐츠 소비 행태로 읽으면 주제가 어색하지 않습니다.",
+      warn:"채택 통보가 제출 순서대로 나가므로 일찍 낼수록 결과를 빨리 받습니다.",
+      url:"https://dcs.or.kr/conference/fall2026"
+    },
+
+    /* ============ 9월 마감 ============ */
+    {
+      g:"tight", name:"2026년 한국경영정보학회 추계학술대회",
       org:"한국경영정보학회 · 연세대학교 바른ICT연구소",
       theme:"Agentic AI에서 Physical AI로: 지능형 정보시스템과 미래 사회 전환",
       stages:[
@@ -980,12 +1066,12 @@
       fields:"Agentic AI·자율 의사결정 / Physical AI·로봇 / 인간-AI 협업 / AI 거버넌스·정책 / AI와 조직·경영 변화 / AI 에이전트 아키텍처 / 기타 MIS 전분야",
       place:"연세대학교 경영관(신촌캠퍼스) · 발표는 13일(금) 하루",
       contact:"한국경영정보학회 사무국 정재정 · 02-795-1354 · office@kmis.or.kr",
-      fit:"메인 테마는 Agentic AI·Physical AI지만 '기타 MIS 전분야' 트랙이 따로 있어, 팬 멤버십 플랫폼의 투표 설계 연구도 그대로 들어갑니다. 국내 정보시스템 분야 최대 학회라 이 주제와 적합도가 가장 높습니다.",
+      fit:"메인 테마는 Agentic AI·Physical AI지만 '기타 MIS 전분야' 트랙이 따로 있어 팬 멤버십 플랫폼의 투표 설계 연구도 그대로 들어갑니다. 국내 정보시스템 분야 최대 학회입니다.",
       warn:"저자 중 학회 정회원이 1명 있어야 합니다. 조대연 교수님이 정회원이 아니라면 본인이 학생회원으로 가입해도 됩니다.",
       url:"http://kmis.web-ference.com/callForPapers/submission"
     },
     {
-      name:"2026 한국인터넷전자상거래학회 추계학술대회",
+      g:"tight", name:"2026 한국인터넷전자상거래학회 추계학술대회",
       org:"한국인터넷전자상거래학회",
       theme:"Smart Ocean Commerce: AI가 여는 해양·수산 산업의 디지털 혁신",
       stages:[
@@ -998,10 +1084,39 @@
       fields:"Smart Ocean Commerce(해양·수산 산업 디지털 혁신) 중심 — 일반 전자상거래·플랫폼 주제 수용 여부는 공고문에 명시돼 있지 않음",
       place:"경상국립대학교 통영캠퍼스 해양과학관",
       contact:"한국인터넷전자상거래학회 사무국 · koreaec21@gmail.com",
-      fit:"이번 테마가 해양·수산 산업 디지털 전환에 좁게 맞춰져 있어, 팬 멤버십 투표 설계 주제와는 결이 다릅니다. 일반 주제도 받아 주는지 사무국 확인이 먼저 필요합니다.",
-      warn:"장소가 경상국립대 통영캠퍼스라 포항에서 이동 거리가 있습니다. KMIS 마감(9/28)을 놓쳤을 때의 대안으로만 남겨둡니다.",
+      fit:"이번 테마가 해양·수산 산업 디지털 전환에 좁게 맞춰져 있어 팬 멤버십 투표 설계 주제와는 결이 다릅니다. 일반 주제도 받아 주는지 사무국 확인이 먼저 필요합니다.",
+      warn:"장소가 통영이라 이동 거리가 있고 테마 적합성도 불확실합니다. 10월 마감 학회들이 더 나은 대안입니다.",
       url:"https://koreaec.org/board/article/8830"
+    },
+    {
+      g:"tight", name:"2026 한국산학기술학회 추계학술대회",
+      org:"한국산학기술학회",
+      theme:"인공지능기술 활용과 산학연 융·복합 기술 Ⅳ",
+      stages:[
+        { label:"논문 제출 마감", date:d(9,30) },
+        { label:"사전등록 마감", date:d(11,1) },
+        { label:"학술대회 개최", date:d(11,19), disp:"11/19(목)~20(금)" }
+      ],
+      who:"공고에 별도 제한 명시 없음",
+      format:"학술대회 양식 1~4쪽. 채택 공지 10/8. 구두·포스터 발표.",
+      fields:"AI 기술 활용과 산학연 융복합 기술, 산업 전반 관련 연구",
+      place:"한화리조트 대천파로스 · 11/20(금) 구두·포스터 발표",
+      contact:"한국산학기술학회 사무국 · 041-565-9561 · kais@kais99.or.kr",
+      fit:"분야가 '산업 전반'으로 넓어 주제 제한이 거의 없고 분량도 1쪽부터 됩니다. 다만 마감이 9/30이라 경영정보학회와 일정 압박이 비슷합니다.",
+      warn:"제출 마감 후에는 논문 수정·보완이 어렵다고 명시돼 있습니다.",
+      url:"https://www.kais99.org/sympo/sympo/intro.kais"
     }
+  ];
+
+  /* 확인했지만 이번 학기엔 어려운 곳 — [학회, 사유, 일정] */
+  var CONF_SKIP = [
+    ["한국경영과학회 추계학술대회", "초록 마감이 9/22. 구두발표는 정회원·교수·박사급 원칙", "10/24(토) · 서울대"],
+    ["한국정보처리학회 ACK 2026", "논문 마감이 9/23. 학부생 논문경진대회(2~3쪽) 트랙은 있음", "11/5~7 · 세종대"],
+    ["기술경영경제학회 동계학술대회", "매년 하반기에 열리지만 2026년 공고를 찾지 못함. 공식 사이트(technology.or.kr)가 현재 접속되지 않음", "사무국 문의 필요"],
+    ["한국IT서비스학회 추계학술대회", "2026년 추계 공고를 찾지 못함. 학회지 상시 투고만 확인", "—"],
+    ["한국벤처창업학회 추계학술대회", "2026년 추계 공고를 찾지 못함", "—"],
+    ["한국스포츠산업경영학회", "하반기 학술대회 공고 없음 (체육학회 연계 행사만 있음)", "—"],
+    ["한국경영학회 융합학술대회", "이미 종료", "8/18~20 · 제주"]
   ];
 
   var PEOPLE = [{ id:"tae", name:"태영" }, { id:"jian", name:"지안" }];
@@ -1540,27 +1655,45 @@
     return h + '</div>';
   }
   var confEl = document.getElementById("v-conf");
+  function confCard(c){
+    var h = '<article class="conf"><div class="conf-top">' + confBadgeHTML(c) +
+            (c.pick ? '<span class="conf-badge pick">추천</span>' : '') + '</div>';
+    h += '<p class="conf-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
+         esc(c.name) + '</a></p><p class="conf-org">' + esc(c.org) + '</p>';
+    if (c.theme) h += '<p class="conf-theme">“' + esc(c.theme) + '”</p>';
+    h += tlHTML(c);
+    h += '<div class="c-body" style="margin-left:0;margin-top:16px"><dl>';
+    h += '<dt>참가자격</dt><dd>' + esc(c.who) + '</dd>';
+    h += '<dt>발표형식</dt><dd>' + esc(c.format) + '</dd>';
+    if (c.fields) h += '<dt>분야</dt><dd>' + esc(c.fields) + '</dd>';
+    h += '<dt>장소</dt><dd>' + esc(c.place) + '</dd>';
+    h += '<dt>문의</dt><dd class="mono">' + esc(c.contact) + '</dd>';
+    h += '</dl>';
+    if (c.fit) h += '<p class="p-note">' + esc(c.fit) + '</p>';
+    if (c.warn) h += '<p class="p-warn">' + esc(c.warn) + '</p>';
+    h += '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>';
+    return h + '</div></article>';
+  }
   function renderConf(){
-    var h = '<p class="fin-note">교수님께 제안드릴 학술대회 후보입니다. 태영 개인 프로젝트라 공모전 픽·합의 로직과는 무관하게 여기 따로 둡니다.</p>';
-    CONF.forEach(function(c){
-      h += '<article class="conf"><div class="conf-top">' + confBadgeHTML(c) +
-           (c.pick ? '<span class="conf-badge pick">이번 학기 목표</span>' : '') + '</div>';
-      h += '<p class="conf-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
-           esc(c.name) + '</a></p><p class="conf-org">' + esc(c.org) + '</p>';
-      if (c.theme) h += '<p class="conf-theme">\u201C' + esc(c.theme) + '\u201D</p>';
-      h += tlHTML(c);
-      h += '<div class="c-body" style="margin-left:0;margin-top:16px"><dl>';
-      h += '<dt>참가자격</dt><dd>' + esc(c.who) + '</dd>';
-      h += '<dt>발표형식</dt><dd>' + esc(c.format) + '</dd>';
-      if (c.fields) h += '<dt>분야</dt><dd>' + esc(c.fields) + '</dd>';
-      h += '<dt>장소</dt><dd>' + esc(c.place) + '</dd>';
-      h += '<dt>문의</dt><dd class="mono">' + esc(c.contact) + '</dd>';
-      h += '</dl>';
-      if (c.fit) h += '<p class="p-note">' + esc(c.fit) + '</p>';
-      if (c.warn) h += '<p class="p-warn">' + esc(c.warn) + '</p>';
-      h += '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>';
-      h += '</div></article>';
+    var h = '<p class="fin-note">경영·기술 쪽 학술대회를 전부 확인하고, 이번 학기에 발표할 수 있는 곳만 모았습니다. ' +
+            '마감이 여유 있는 곳부터 보여줍니다. 태영 개인 프로젝트라 공모전 픽·합의 로직과는 무관합니다.</p>';
+    CONF_GROUPS.forEach(function(g){
+      var items = CONF.filter(function(c){ return c.g === g.id; })
+                      .sort(function(a,b){ return a.stages[0].date - b.stages[0].date; });
+      if (!items.length) return;
+      h += '<div class="topic"><div class="topic-h"><h2>' + esc(g.label) +
+           '</h2><span class="n">' + items.length + '</span></div>';
+      if (g.note) h += '<p class="topic-note">' + esc(g.note) + '</p>';
+      items.forEach(function(c){ h += confCard(c); });
+      h += '</div>';
     });
+    h += '<div class="topic"><div class="topic-h"><h2>확인했지만 이번 학기엔 어려운 곳</h2>' +
+         '<span class="n">' + CONF_SKIP.length + '</span></div>' +
+         '<div class="past-wrap"><table><thead><tr><th>학회</th><th>사유</th><th>일정</th></tr></thead><tbody>';
+    CONF_SKIP.forEach(function(r){
+      h += '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="w">' + esc(r[2]) + '</td></tr>';
+    });
+    h += '</tbody></table></div></div>';
     confEl.innerHTML = h;
   }
 
