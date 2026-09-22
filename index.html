@@ -25,7 +25,7 @@
     --dv-build:#1F6B57; --dv-build-bg:#E3F0EB;
     /* 달력에서 공모전을 구분하는 색. 순서대로 돌아가며 배정된다 */
     --e1:#2B6CB0; --e2:#B05423; --e3:#2F7A55;
-    --e4:#8B4A9C; --e5:#A03A4E; --e6:#4A6572;
+    --e4:#8B4A9C; --e5:#A03A4E; --e6:#4A6572; --e7:#8A6A0E;
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
@@ -40,7 +40,7 @@
       --dv-media:#C4A3E8; --dv-media-bg:#271E33;
       --dv-build:#7FC9AE; --dv-build-bg:#15291F;
       --e1:#7FB3EC; --e2:#E3A46E; --e3:#77CCA5;
-      --e4:#C9A0E0; --e5:#E58A9C; --e6:#9FB4C0;
+      --e4:#C9A0E0; --e5:#E58A9C; --e6:#9FB4C0; --e7:#DDBB5C;
     }
   }
   :root[data-theme="dark"]{
@@ -55,7 +55,7 @@
     --dv-media:#C4A3E8; --dv-media-bg:#271E33;
     --dv-build:#7FC9AE; --dv-build-bg:#15291F;
     --e1:#7FB3EC; --e2:#E3A46E; --e3:#77CCA5;
-    --e4:#C9A0E0; --e5:#E58A9C; --e6:#9FB4C0;
+    --e4:#C9A0E0; --e5:#E58A9C; --e6:#9FB4C0; --e7:#DDBB5C;
   }
 
   *{box-sizing:border-box}
@@ -445,6 +445,69 @@
     .tl::before{display:none}
     .tl-step{padding-top:0;padding-left:20px}
     .tl-dot{top:2px;left:0}
+  }
+  /* ---- 학술대회 달력 (공모전 달력과 클래스·상태를 공유하지 않는다) ---- */
+  .ccal{margin-top:26px}
+  .cleg{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:14px}
+  .cleg-b{
+    display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+    font:500 12px/1 "IBM Plex Sans KR",sans-serif;color:var(--ink-2);
+    background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:6px 11px 6px 9px;
+  }
+  .cleg-b i{width:9px;height:9px;border-radius:3px;display:block;flex:none}
+  .cleg-b:hover{border-color:var(--ink-3);color:var(--ink)}
+  .cleg-b[aria-pressed="false"]{color:var(--ink-3);background:transparent;border-style:dashed}
+  .cleg-b[aria-pressed="false"] i{opacity:.3}
+  .cal-hint{font-size:11.5px;color:var(--ink-3);margin:8px 0 0}
+  .cev{
+    display:block;width:100%;margin-top:3px;padding:2px 4px;border:none;border-radius:3px;
+    font-family:inherit;font-size:10.5px;line-height:1.35;text-align:left;cursor:pointer;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .cev:hover{filter:brightness(1.06);box-shadow:0 0 0 1px var(--c)}
+  .cev b{font-weight:600}
+  .cev[data-k="end"]{background:var(--c);color:var(--on-solid)}
+  .cev[data-k="sched"]{
+    background:var(--rule-2);
+    background:color-mix(in srgb, var(--c) 16%, transparent);
+    color:var(--c);
+  }
+  .cal-d.was .cev{opacity:.45}
+  .conf{scroll-margin-top:72px}
+  .conf.flash{animation:flash 1.8s ease-out}
+  @media (prefers-reduced-motion:reduce){
+    .conf.flash{animation:none;background:var(--both-bg);box-shadow:0 0 0 10px var(--both-bg)}
+  }
+
+  /* 다가오는 일정 목록 — 좁은 화면에선 달력 칩이 점이 되므로 글자는 여기서 읽는다 */
+  .ag-list{list-style:none;margin:8px 0 0;padding:0}
+  .ag-row{
+    display:grid;grid-template-columns:54px 112px minmax(0,1fr);gap:2px 14px;align-items:baseline;
+    padding:9px 0;border-bottom:1px solid var(--rule-2);
+  }
+  .ag-d{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13px;
+        font-weight:600;text-align:right;color:var(--ink-2)}
+  .ag-row.hot .ag-d{color:var(--hot)}
+  .ag-date{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);white-space:nowrap}
+  .ag-body{min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+  .ag-name{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;
+           color:var(--ink);text-decoration:none}
+  .ag-name:hover{text-decoration:underline}
+  .ag-name i{width:8px;height:8px;border-radius:2px;display:block;flex:none}
+  .ag-t{font-size:13px;color:var(--ink-2)}
+  .ag-row[data-k="sched"] .ag-t,.ag-row[data-k="sched"] .ag-d{color:var(--ink-3);font-weight:500}
+  @media (max-width:600px){
+    .ag-row{grid-template-columns:46px minmax(0,1fr)}
+    .ag-date,.ag-body{grid-column:2}
+    .cev{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:16px;height:16px;padding:0;margin:1px 1px 0 0;
+      border-radius:50%;font-size:0;line-height:0;
+    }
+    .cev[data-k="end"],.cev[data-k="sched"]{background:none}
+    .cev::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+    .cev[data-k="sched"]::before{opacity:.45}
+    .cev:hover{filter:none;box-shadow:none}
   }
 </style>
 
@@ -978,7 +1041,7 @@
   var CONF = [
     /* ============ 경영·기술경영 ============ */
     {
-      g:"mgmt", name:"2026 한국지능정보시스템학회 추계학술대회", pick:true,
+      g:"mgmt", id:"kiiss", short:"지능정보시스템", name:"2026 한국지능정보시스템학회 추계학술대회", pick:true,
       org:"한국지능정보시스템학회",
       theme:"북극항로 시대를 여는 해양산업의 인공지능대전환",
       stages:[
@@ -996,13 +1059,13 @@
       url:"https://kiiss.or.kr/"
     },
     {
-      g:"mgmt", name:"2026 한국기술혁신학회 추계학술대회",
+      g:"mgmt", id:"kotis", short:"기술혁신학회", name:"2026 한국기술혁신학회 추계학술대회",
       org:"한국기술혁신학회",
       theme:"전환기 혁신 거버넌스의 방향: 국정 가치의 변화와 과학기술혁신정책의 과제 (안)",
       stages:[
         { label:"발표 신청 마감", date:d(10,12) },
         { label:"논문 제출 마감", date:d(10,26) },
-        { label:"학술대회 개최", date:d(11,4), disp:"11/4(수)~7(토)" }
+        { label:"학술대회 개최", date:d(11,4), until:d(11,7), disp:"11/4(수)~7(토)" }
       ],
       who:"공고에 별도 제한 명시 없음 — 학부생 발표 규정은 공고 첨부 CFP 확인 필요",
       format:"발표 신청(8/31~10/12) 후 논문 제출(10/13~10/26). 분과별 발표·토론.",
@@ -1016,12 +1079,12 @@
 
     /* ============ IT 학회 대학생 부문 ============ */
     {
-      g:"it", name:"2026 한국정보기술학회 추계종합학술대회 및 대학생논문경진대회",
+      g:"it", id:"kiit", short:"정보기술학회", name:"2026 한국정보기술학회 추계종합학술대회 및 대학생논문경진대회",
       org:"한국정보기술학회",
       stages:[
         { label:"논문 투고 마감", date:d(10,23) },
         { label:"등록비 납부 마감", date:d(11,10) },
-        { label:"학술대회 발표", date:d(11,26), disp:"11/26(목)~27(금)" }
+        { label:"학술대회 발표", date:d(11,26), until:d(11,27), disp:"11/26(목)~27(금)" }
       ],
       who:"대학생논문경진대회 부문 별도 운영 · 회원/비회원 구분 없음",
       format:"구두 · 포스터 · 온라인 중 선택. 온라인은 채택 후 3~5분 영상 제출 + 당일 zoom 질의응답. 대학생부문 등록비 오프라인 13만원 / 온라인 8만원.",
@@ -1033,13 +1096,13 @@
       url:"https://ki-it.or.kr/conference/fallconf26"
     },
     {
-      g:"it", name:"2026 한국디지털콘텐츠학회 추계종합학술대회 및 대학생논문경진대회",
+      g:"it", id:"dcs", short:"디지털콘텐츠", name:"2026 한국디지털콘텐츠학회 추계종합학술대회 및 대학생논문경진대회",
       org:"한국디지털콘텐츠학회",
       theme:"Agentic AI 시대, 디지털 콘텐츠의 새로운 패러다임",
       stages:[
         { label:"논문 제출 마감", date:d(10,26) },
         { label:"사전등록 마감", date:d(11,2) },
-        { label:"학술대회 개최", date:d(11,19), disp:"11/19(목)~20(금)" }
+        { label:"학술대회 개최", date:d(11,19), until:d(11,20), disp:"11/19(목)~20(금)" }
       ],
       who:"대학생논문경진대회 부문 별도 운영 (대학생은 포스터 발표)",
       format:"학회 양식 1~2쪽 논문. 채택 통보는 10/5부터 제출 순서대로 발송. 대학생 등록비 6만원.",
@@ -1053,13 +1116,13 @@
 
     /* ============ 9월 마감 ============ */
     {
-      g:"tight", name:"2026년 한국경영정보학회 추계학술대회",
+      g:"tight", id:"kmis", short:"경영정보학회", name:"2026년 한국경영정보학회 추계학술대회",
       org:"한국경영정보학회 · 연세대학교 바른ICT연구소",
       theme:"Agentic AI에서 Physical AI로: 지능형 정보시스템과 미래 사회 전환",
       stages:[
         { label:"초록 접수 마감", date:d(9,28) },
         { label:"전문·발표자료 접수 마감", date:d(10,19) },
-        { label:"학술대회 개최", date:d(11,12), disp:"11/12(목)~13(금)" }
+        { label:"학술대회 개최", date:d(11,12), until:d(11,13), disp:"11/12(목)~13(금)" }
       ],
       who:"제한 없음 — 학생·연구자·실무자 누구나 참여 가능 (저자 중 학회 정회원 1인 이상 포함 필요)",
       format:"논문 · 튜토리얼 · 패널토의 · 포스터 중 선택. 우수논문상 심사를 신청하면 6쪽 분량 전문이 필수. 포스터 발표는 학부생이 선택할 수 있는 옵션으로 별도 안내되어 있음.",
@@ -1071,13 +1134,13 @@
       url:"http://kmis.web-ference.com/callForPapers/submission"
     },
     {
-      g:"tight", name:"2026 한국인터넷전자상거래학회 추계학술대회",
+      g:"tight", id:"kiec", short:"전자상거래학회", name:"2026 한국인터넷전자상거래학회 추계학술대회",
       org:"한국인터넷전자상거래학회",
       theme:"Smart Ocean Commerce: AI가 여는 해양·수산 산업의 디지털 혁신",
       stages:[
         { label:"초록 접수 마감", date:d(9,30) },
         { label:"전문·확장초록 접수 마감", date:d(10,18) },
-        { label:"학술대회 개최", date:d(10,30), disp:"10/30(금)~31(토)" }
+        { label:"학술대회 개최", date:d(10,30), until:d(10,31), disp:"10/30(금)~31(토)" }
       ],
       who:"공고에 별도 제한 명시 없음 (확인 필요)",
       format:"6쪽 내외 전문 또는 3쪽 이내 확장초록. 우수논문상 심사 대상은 6~10쪽 전문 필수.",
@@ -1089,13 +1152,13 @@
       url:"https://koreaec.org/board/article/8830"
     },
     {
-      g:"tight", name:"2026 한국산학기술학회 추계학술대회",
+      g:"tight", id:"kais", short:"산학기술학회", name:"2026 한국산학기술학회 추계학술대회",
       org:"한국산학기술학회",
       theme:"인공지능기술 활용과 산학연 융·복합 기술 Ⅳ",
       stages:[
         { label:"논문 제출 마감", date:d(9,30) },
         { label:"사전등록 마감", date:d(11,1) },
-        { label:"학술대회 개최", date:d(11,19), disp:"11/19(목)~20(금)" }
+        { label:"학술대회 개최", date:d(11,19), until:d(11,20), disp:"11/19(목)~20(금)" }
       ],
       who:"공고에 별도 제한 명시 없음",
       format:"학술대회 양식 1~4쪽. 채택 공지 10/8. 구두·포스터 발표.",
@@ -1655,8 +1718,146 @@
     return h + '</div>';
   }
   var confEl = document.getElementById("v-conf");
+
+  /* 색은 학회를 따라간다 — 목록 순서대로 --e1~--e7, 숨겨도 다시 칠하지 않는다 */
+  var confCol = {};
+  CONF.forEach(function(c, i){ confCol[c.id] = i + 1; });
+
+  /* 달력에서 숨긴 학회는 이 기기에만 기억한다 (공모전 픽처럼 공유할 필요가 없다) */
+  var CONF_HKEY = "hgu.conf.hidden";
+  var confHidden = {};
+  try { confHidden = JSON.parse(localStorage.getItem(CONF_HKEY)) || {}; } catch(err) { confHidden = {}; }
+  function saveConfHidden(){ try { localStorage.setItem(CONF_HKEY, JSON.stringify(confHidden)); } catch(err) {} }
+
+  /* 논문·초록 제출 마감은 꽉 찬 칩, 등록 마감과 학술대회 당일은 옅은 칩 */
+  function confKind(s){ return (/마감/.test(s.label) && !/등록/.test(s.label)) ? "end" : "sched"; }
+  function confChip(s){ return s.label.replace(/\s*\([^)]*\)/g, ""); }
+
+  function confEventsOf(c){
+    var out = [];
+    c.stages.forEach(function(s){
+      var k = confKind(s), t = confChip(s);
+      out.push({ d:s.date, k:k, t:t, c:c, s:s });
+      if (s.until && s.until > s.date) {
+        for (var t2 = s.date.getTime() + 86400000; t2 <= s.until.getTime(); t2 += 86400000)
+          out.push({ d:new Date(t2), k:k, t:t, c:c, s:s });
+      }
+    });
+    return out;
+  }
+
+  var confCalMonth = null, confEvs = [];
+
+  function confAgendaHTML(){
+    var rows = [];
+    CONF.forEach(function(c){
+      if (confHidden[c.id]) return;
+      c.stages.forEach(function(s){
+        if (days(s.until || s.date) < 0) return;          // 완전히 지난 일정은 뺀다
+        rows.push({ c:c, s:s, k:confKind(s) });
+      });
+    });
+    rows.sort(function(a,b){ return (a.s.date - b.s.date) || (a.k === "end" ? -1 : 1); });
+
+    var h = '<div class="ag"><div class="cal-h"><h2>다가오는 일정</h2><span class="n">' + rows.length + '건</span></div>';
+    if (!rows.length) return h + '<p class="empty">표시할 일정이 없습니다. 위에서 학회를 다시 켜 보세요.</p></div>';
+    h += '<ul class="ag-list">';
+    rows.forEach(function(r){
+      var n = days(r.s.date);
+      var dtxt = n < 0 ? "진행 중" : (n === 0 ? "오늘" : "D-" + n);
+      h += '<li class="ag-row' + (r.k === "end" && n >= 0 && n <= 7 ? " hot" : "") + '" data-k="' + r.k + '">' +
+           '<span class="ag-d">' + dtxt + '</span>' +
+           '<span class="ag-date">' + esc(r.s.disp || mdw(r.s.date)) + '</span>' +
+           '<span class="ag-body"><a class="ag-name" href="#cf-' + r.c.id + '" data-cjump="' + r.c.id + '">' +
+           '<i style="background:var(--e' + confCol[r.c.id] + ')"></i>' + esc(r.c.short) + '</a>' +
+           '<span class="ag-t">' + esc(r.s.label) + '</span></span></li>';
+    });
+    return h + '</ul></div>';
+  }
+
+  function confCalHTML(){
+    var all = [], shown = [];
+    CONF.forEach(function(c){
+      var ev = confEventsOf(c);
+      all = all.concat(ev);
+      if (!confHidden[c.id]) shown = shown.concat(ev);
+    });
+    shown.sort(function(a,b){ return (a.d - b.d) || (a.k === "end" ? -1 : 1); });
+    shown.forEach(function(e, i){ e.i = i; });   // 칩에서 상세를 찾아갈 번호
+    confEvs = shown;
+
+    // 넘길 수 있는 범위는 숨김과 상관없이 전체 학회 기준 — 켜고 끌 때 범위가 출렁이지 않게
+    var lo = KP.y*12 + (KP.m-1), hi = lo;
+    all.forEach(function(e){
+      var n = e.d.getUTCFullYear()*12 + e.d.getUTCMonth();
+      if (n < lo) lo = n;
+      if (n > hi) hi = n;
+    });
+    if (hi - lo > 11) hi = lo + 11;
+    if (confCalMonth === null) confCalMonth = KP.y*12 + (KP.m-1);
+    if (confCalMonth < lo) confCalMonth = lo;
+    if (confCalMonth > hi) confCalMonth = hi;
+
+    var byDay = {};
+    shown.forEach(function(e){ (byDay[dayKey(e.d)] = byDay[dayKey(e.d)] || []).push(e); });
+
+    var y = Math.floor(confCalMonth/12), m = confCalMonth % 12;
+    var lead = new Date(Date.UTC(y, m, 1)).getUTCDay();
+    var len  = new Date(Date.UTC(y, m+1, 0)).getUTCDate();
+    var mine = shown.filter(function(e){
+      return e.d.getUTCFullYear()*12 + e.d.getUTCMonth() === confCalMonth;
+    }).length;
+    var nShown = CONF.filter(function(c){ return !confHidden[c.id]; }).length;
+    var todayKey = dayKey(TODAY);
+
+    var h = '<div class="cal-h"><h2>학술대회 일정 달력</h2>' +
+            '<span class="n">' + nShown + '/' + CONF.length + '곳 표시</span></div>' +
+            '<div class="cal-nav">' +
+            '<button type="button" class="cal-b" data-ccal="-1" aria-label="이전 달"' +
+            (confCalMonth <= lo ? " disabled" : "") + '>‹</button>' +
+            '<span class="cal-t">' + y + '. ' + (m+1 < 10 ? "0" : "") + (m+1) + '</span>' +
+            '<button type="button" class="cal-b" data-ccal="1" aria-label="다음 달"' +
+            (confCalMonth >= hi ? " disabled" : "") + '>›</button>' +
+            '<span class="cal-i">이 달 ' + mine + '건 · ' + (confCalMonth-lo+1) + '/' + (hi-lo+1) + '</span>' +
+            '</div>';
+
+    h += '<div class="cleg">';
+    CONF.forEach(function(c){
+      h += '<button type="button" class="cleg-b" data-ctog="' + c.id + '" aria-pressed="' + (!confHidden[c.id]) +
+           '" title="' + esc(c.name) + '"><i style="background:var(--e' + confCol[c.id] + ')"></i>' +
+           esc(c.short) + '</button>';
+    });
+    h += '</div><p class="cal-hint">학회 이름을 누르면 달력과 아래 목록에서 숨기거나 다시 보이게 할 수 있습니다.</p>';
+
+    h += '<div class="cal-m"><div class="cal-g">';
+    WD.forEach(function(w){ h += '<div class="cal-w">' + w + '</div>'; });
+    for (var b = 0; b < lead; b++) h += '<div class="cal-d off"></div>';
+    for (var dd = 1; dd <= len; dd++){
+      var k = y*10000 + (m+1)*100 + dd;
+      h += '<div class="cal-d' + (k === todayKey ? " now" : "") + (k < todayKey ? " was" : "") +
+           '"><span class="dn">' + dd + '</span>';
+      (byDay[k] || []).forEach(function(e){
+        h += '<button type="button" class="cev" data-k="' + e.k + '" data-cei="' + e.i + '"' +
+             ' style="--c:var(--e' + confCol[e.c.id] + ')"' +
+             ' title="' + esc(e.c.short + " — " + e.t) +
+             '"><b>' + esc(e.c.short) + '</b> ' + esc(e.t) + '</button>';
+      });
+      h += '</div>';
+    }
+    for (var tail = (lead + len) % 7; tail > 0 && tail < 7; tail++) h += '<div class="cal-d off"></div>';
+    h += '</div></div>';
+    h += '<p class="fin-note" style="margin-top:14px"><b>꽉 찬 칩이 논문·초록 마감</b>, 옅은 칩이 등록 마감과 학술대회 당일입니다. ' +
+         '칩을 누르면 그 일정을 자세히 볼 수 있습니다.</p>';
+    return h + confAgendaHTML();
+  }
+
+  function renderConfCal(){
+    var box = document.getElementById("conf-cal");
+    if (box) box.innerHTML = confCalHTML();
+  }
+
   function confCard(c){
-    var h = '<article class="conf"><div class="conf-top">' + confBadgeHTML(c) +
+    var h = '<article class="conf" id="cf-' + c.id + '"><div class="conf-top">' + confBadgeHTML(c) +
             (c.pick ? '<span class="conf-badge pick">추천</span>' : '') + '</div>';
     h += '<p class="conf-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
          esc(c.name) + '</a></p><p class="conf-org">' + esc(c.org) + '</p>';
@@ -1674,9 +1875,11 @@
     h += '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>';
     return h + '</div></article>';
   }
+
   function renderConf(){
     var h = '<p class="fin-note">경영·기술 쪽 학술대회를 전부 확인하고, 이번 학기에 발표할 수 있는 곳만 모았습니다. ' +
             '주제와 잘 맞는 학회를 위에, 9월 마감이라 빠듯한 곳을 아래에 두었습니다. 태영 개인 프로젝트라 공모전 픽·합의 로직과는 무관합니다.</p>';
+    h += '<div class="ccal" id="conf-cal">' + confCalHTML() + '</div>';
     CONF_GROUPS.forEach(function(g){
       var items = CONF.filter(function(c){ return c.g === g.id; })
                       .sort(function(a,b){ return a.stages[0].date - b.stages[0].date; });
@@ -1696,6 +1899,75 @@
     h += '</tbody></table></div></div>';
     confEl.innerHTML = h;
   }
+
+  /* 학술대회 달력 조작 — 공모전 달력([data-cal], .ev, .cal)과 겹치지 않는 이름만 쓴다 */
+  function confCalStep(dir){
+    var b = document.querySelector('#conf-cal [data-ccal="' + dir + '"]');
+    if (!b || b.disabled) return;
+    confCalMonth += dir;
+    renderConfCal();
+  }
+  function confToggle(id){
+    if (confHidden[id]) delete confHidden[id]; else confHidden[id] = true;
+    saveConfHidden();
+    renderConfCal();
+  }
+  function openConfSheet(i){
+    var e = confEvs[i];
+    if (!e) return;
+    var c = e.c, n = days(e.d);
+    var meta = n < 0 ? "지난 일정" : (n === 0 ? "오늘" : "D-" + n);
+    if (e.s.until) meta += " · " + (e.s.disp || (mdw(e.s.date) + "~" + mdw(e.s.until)));
+    var h = '<div class="sheet-h">' +
+            '<span class="sheet-d">' + md(e.d) + ' (' + WD[e.d.getUTCDay()] + ')</span>' +
+            '<p class="sheet-t">' + esc(e.s.label) + '</p>' +
+            '<button type="button" class="sheet-x" data-x="1" aria-label="닫기">✕</button></div>' +
+            '<p class="sheet-meta">' + esc(meta) + '</p>' +
+            '<p class="sheet-name"><i></i>' + esc(c.name) + '</p>' +
+            '<div class="sheet-go">' +
+            '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>' +
+            '<a class="go" href="#cf-' + c.id + '" data-cjump="' + c.id + '">학술대회 자세히 →</a>' +
+            '</div>';
+    var box = sheetEl.querySelector(".sheet-c");
+    box.style.setProperty("--c", "var(--e" + confCol[c.id] + ")");
+    box.innerHTML = h;
+    sheetEl.hidden = false;
+  }
+
+  document.addEventListener("click", function(e){
+    var nb = e.target.closest("[data-ccal]");
+    if (nb) { if (!nb.disabled) confCalStep(+nb.getAttribute("data-ccal")); return; }
+    var tg = e.target.closest("[data-ctog]");
+    if (tg) { confToggle(tg.getAttribute("data-ctog")); return; }
+    var ce = e.target.closest(".cev");
+    if (ce) { openConfSheet(+ce.getAttribute("data-cei")); return; }
+    var j = e.target.closest("[data-cjump]");
+    if (j) {
+      e.preventDefault();
+      closeSheet();
+      var el = document.getElementById("cf-" + j.getAttribute("data-cjump"));
+      if (!el) return;
+      el.classList.remove("flash");
+      void el.offsetWidth;
+      el.classList.add("flash");
+      setTimeout(function(){ el.classList.remove("flash"); }, 1800);
+      el.scrollIntoView({ behavior:"auto", block:"start" });
+    }
+  });
+
+  // 달력 칸을 옆으로 밀어서 달 넘기기 (공모전 달력의 .cal 스와이프와 따로 논다)
+  var cswX = null, cswY = null;
+  document.addEventListener("touchstart", function(e){
+    var t = e.changedTouches[0];
+    cswX = e.target.closest(".ccal .cal-m") ? t.clientX : null;
+    cswY = t.clientY;
+  }, {passive:true});
+  document.addEventListener("touchend", function(e){
+    if (cswX === null) return;
+    var dx = e.changedTouches[0].clientX - cswX, dy = e.changedTouches[0].clientY - cswY;
+    cswX = null;
+    if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy)) confCalStep(dx < 0 ? 1 : -1);
+  }, {passive:true});
 
   function render(){ renderAll(); renderPicked(); renderFinal(); }
 
@@ -1818,7 +2090,7 @@
     var p = kstParts();
     if(p.y===KP.y && p.m===KP.m && p.d===KP.d) return;
     KP = p; TODAY = new Date(Date.UTC(p.y, p.m-1, p.d));
-    stamp(); render();
+    stamp(); render(); renderConf();
   }
   function stamp(){
     document.getElementById("today").textContent =
