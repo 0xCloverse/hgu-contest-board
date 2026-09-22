@@ -1676,7 +1676,7 @@
   }
   function renderConf(){
     var h = '<p class="fin-note">경영·기술 쪽 학술대회를 전부 확인하고, 이번 학기에 발표할 수 있는 곳만 모았습니다. ' +
-            '마감이 여유 있는 곳부터 보여줍니다. 태영 개인 프로젝트라 공모전 픽·합의 로직과는 무관합니다.</p>';
+            '주제와 잘 맞는 학회를 위에, 9월 마감이라 빠듯한 곳을 아래에 두었습니다. 태영 개인 프로젝트라 공모전 픽·합의 로직과는 무관합니다.</p>';
     CONF_GROUPS.forEach(function(g){
       var items = CONF.filter(function(c){ return c.g === g.id; })
                       .sort(function(a,b){ return a.stages[0].date - b.stages[0].date; });
