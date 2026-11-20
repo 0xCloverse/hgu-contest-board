@@ -494,10 +494,6 @@
   <div class="sheet-c" role="dialog" aria-modal="true" aria-label="공모전 직접 추가">
     <div class="sheet-h"><p class="sheet-t">공모전 직접 추가</p><button type="button" class="sheet-x" data-addx="1" aria-label="닫기">✕</button></div>
     <form class="addf" id="addf" novalidate>
-      <div><div class="who-r" id="add-who">
-        <button type="button" data-p="tae" aria-pressed="false">태영이 추가</button>
-        <button type="button" data-p="jian" aria-pressed="false">지안이 추가</button>
-      </div></div>
       <label>카테고리<select id="add-g"></select></label>
       <label>공모전 이름<input id="add-name" type="text" maxlength="80" placeholder="공고에 적힌 이름 그대로"></label>
       <label>공고 링크<input id="add-url" type="url" placeholder="https://"></label>
@@ -1329,7 +1325,7 @@
   var ROOT = "/v2";
   // DATA.picks[cid] = {tae:true, jian:true}
   // DATA.memos[cid] = {tae:"메모", jian:"메모"}   ← 사람별로 따로 적는다
-  // DATA.custom[key] = {g, name, url, end:"YYYY-MM-DD", time?:"HH:MM", memo?, by, at}  ← 보드에서 직접 추가, 정리 대기
+  // DATA.custom[key] = {g, name, url, end:"YYYY-MM-DD", time?:"HH:MM", memo?, at}  ← 보드에서 직접 추가, 정리 대기
   var DATA = { picks:{}, memos:{}, custom:{} };
   var LKEY = "hgu.board.v2";
 
@@ -1481,8 +1477,8 @@
       var end = new Date(Date.UTC(+m[1], +m[2]-1, +m[3], t ? +t[1] : 23, t ? +t[2] : 59));
       end.hasTime = !!t;
       var g = GROUPS.some(function(x){ return x.id === o.g; }) ? o.g : GROUPS[GROUPS.length-1].id;
-      return { g:g, name:o.name, org:"직접 추가 · " + (o.by === "jian" ? "지안" : "태영"),
-               end:end, url:o.url || "#", note:o.memo || "", pending:true, key:k, by:o.by, at:o.at };
+      return { g:g, name:o.name, org:"직접 추가",
+               end:end, url:o.url || "#", note:o.memo || "", pending:true, key:k, at:o.at };
     }).filter(Boolean);
   }
   function allC(){ return C.concat(customList()); }
@@ -1935,21 +1931,12 @@
 
   /* ---------- 직접 추가 ---------- */
   var addSheet = document.getElementById("addsheet"), addForm = document.getElementById("addf");
-  var addWho = null, MEKEY = "hgu.board.me";
   document.getElementById("add-g").innerHTML = GROUPS.map(function(g){
     return '<option value="' + g.id + '">' + esc(g.label) + '</option>';
   }).join("");
-  function setWho(p){
-    addWho = p;
-    Array.prototype.forEach.call(document.querySelectorAll("#add-who button"), function(b){
-      b.setAttribute("aria-pressed", b.getAttribute("data-p") === p ? "true" : "false");
-    });
-  }
   function openAdd(){
     closePop(); closeSheet();
     addForm.reset(); document.getElementById("add-err").textContent = "";
-    var me = null; try{ me = localStorage.getItem(MEKEY); }catch(e){}
-    setWho(me === "tae" || me === "jian" ? me : null);
     addSheet.hidden = false;
     document.getElementById("add-name").focus();
   }
@@ -1958,8 +1945,6 @@
   document.addEventListener("click", function(e){
     if(e.target.closest("#addopen")){ openAdd(); return; }
     if(e.target.closest("[data-addx]")){ closeAdd(); return; }
-    var wb = e.target.closest("#add-who button");
-    if(wb){ setWho(wb.getAttribute("data-p")); return; }
     var del = e.target.closest("[data-del]");
     if(del){
       var k = del.getAttribute("data-del"), o = DATA.custom[k];
@@ -1981,16 +1966,14 @@
     var time = document.getElementById("add-time").value;
     var memo = document.getElementById("add-memo").value.trim();
     var g    = document.getElementById("add-g").value;
-    if(!addWho){ err.textContent = "누가 추가하는지 골라 주세요."; return; }
     if(!name){ err.textContent = "공모전 이름을 적어 주세요."; return; }
     if(!/^https?:\/\/\S+\.\S+/.test(url)){ err.textContent = "공고 링크를 https://로 시작하는 주소로 넣어 주세요."; return; }
     if(!/^\d{4}-\d{2}-\d{2}$/.test(end)){ err.textContent = "접수 마감일을 골라 주세요."; return; }
     if(!cid(name)){ err.textContent = "이름에 글자가 하나는 있어야 합니다."; return; }
     var dup = allC().filter(function(c){ return cid(c.name) === cid(name); })[0];
     if(dup){ err.textContent = "같은 이름이 이미 보드에 있습니다" + (dup.pending ? " (정리 대기 중)." : "."); return; }
-    try{ localStorage.setItem(MEKEY, addWho); }catch(ex){}
     var key = "x" + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
-    var o = { g:g, name:name, url:url, end:end, by:addWho, at:Date.now() };
+    var o = { g:g, name:name, url:url, end:end, at:Date.now() };
     if(time) o.time = time;
     if(memo) o.memo = memo;
     DATA.custom[key] = o;
