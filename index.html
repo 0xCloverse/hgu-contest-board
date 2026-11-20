@@ -436,8 +436,10 @@
 
   <section id="v-final" role="tabpanel" hidden></section>
 
+  <section id="v-closed" role="tabpanel" hidden></section>
 
-  <details class="past" id="past">
+
+  <details class="past" id="past" hidden>
     <summary>올해는 끝났지만 내년에 노릴 것</summary>
     <div class="past-wrap">
       <table>
@@ -1249,42 +1251,60 @@
            '" aria-expanded="false">' + label + ' ▾</button></div>';
   }
 
-  var allEl = document.getElementById("v-all");
-  function renderAll(){
-    var open = 0, h = "";
-    GROUPS.forEach(function(g){
-      var items = C.filter(function(c){ return c.g === g.id; })
-                   .sort(function(a,b){ return a.end - b.end; });
-      if(!items.length) return;
-      h += '<div class="topic"><div class="topic-h"><h2>' + esc(g.label) +
-           '</h2><span class="n">' + items.length + '</span></div>';
-      items.forEach(function(c){
-        if(c.rolling || days(c.end) >= 0) open++;
-        h += '<article class="c" id="c-' + cid(c.name) + '"' + (skipped(c.name)?' data-skip="1"':'') +
+  function isClosed(c){ return !c.rolling && days(c.end) < 0; }
+
+  function cardHTML(c){
+    var h = "";
+    h += '<article class="c" id="c-' + cid(c.name) + '"' + (skipped(c.name)?' data-skip="1"':'') +
              '><div class="c-head">' + ddayHTML(c) +
              '<div><p class="c-title"><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
              esc(c.name) + '</a></p><p class="c-org">' + esc(c.org) + '</p>' +
              dvChip(c.name) + whoHTML(c.name) + '</div>' +
              pickBtn(c.name) + '</div>';
-        h += '<div class="c-body"><dl>';
-        var dv = DELIVER[c.name];
-        if(dv) h += '<dt>제출물</dt><dd><b>' + esc(dv[0]) + '</b><br>' + esc(dv[2]) + '</dd>';
-        h += '<dt>참가자격</dt><dd><b>' + esc(c.who) + '</b></dd>';
-        if(c.team && c.team !== "—") h += '<dt>팀 구성</dt><dd>' + esc(c.team) + '</dd>';
-        h += '<dt>시상</dt><dd class="mono">' + esc(c.prize) + '</dd>';
-        h += '<dt>주제</dt><dd>' + esc(c.topic) + '</dd>';
-        if(c.sched) h += '<dt>일정</dt><dd>' + esc(c.sched) + '</dd>';
-        if(c.place) h += '<dt>장소</dt><dd>' + esc(c.place) + '</dd>';
-        h += '</dl>';
-        if(c.note) h += '<p class="p-note">' + esc(c.note) + '</p>';
-        if(c.warn) h += '<p class="p-warn">' + esc(c.warn) + '</p>';
-        h += '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>';
-        h += '</div></article>';
-      });
+    h += '<div class="c-body"><dl>';
+    var dv = DELIVER[c.name];
+    if(dv) h += '<dt>제출물</dt><dd><b>' + esc(dv[0]) + '</b><br>' + esc(dv[2]) + '</dd>';
+    h += '<dt>참가자격</dt><dd><b>' + esc(c.who) + '</b></dd>';
+    if(c.team && c.team !== "—") h += '<dt>팀 구성</dt><dd>' + esc(c.team) + '</dd>';
+    h += '<dt>시상</dt><dd class="mono">' + esc(c.prize) + '</dd>';
+    h += '<dt>주제</dt><dd>' + esc(c.topic) + '</dd>';
+    if(c.sched) h += '<dt>일정</dt><dd>' + esc(c.sched) + '</dd>';
+    if(c.place) h += '<dt>장소</dt><dd>' + esc(c.place) + '</dd>';
+    h += '</dl>';
+    if(c.note) h += '<p class="p-note">' + esc(c.note) + '</p>';
+    if(c.warn) h += '<p class="p-warn">' + esc(c.warn) + '</p>';
+    h += '<a class="go" href="' + esc(c.url) + '" target="_blank" rel="noopener">공고 열기 →</a>';
+    h += '</div></article>';
+    return h;
+  }
+
+  // 같은 주제 묶음으로 카드를 그린다. 마감 탭은 최근에 마감된 것부터.
+  function groupedHTML(list, newestFirst){
+    var h = "";
+    GROUPS.forEach(function(g){
+      var items = list.filter(function(c){ return c.g === g.id; })
+                      .sort(function(a,b){ return newestFirst ? b.end - a.end : a.end - b.end; });
+      if(!items.length) return;
+      h += '<div class="topic"><div class="topic-h"><h2>' + esc(g.label) +
+           '</h2><span class="n">' + items.length + '</span></div>';
+      items.forEach(function(c){ h += cardHTML(c); });
       h += '</div>';
     });
-    allEl.innerHTML = h;
-    document.getElementById("n-open").textContent = open;
+    return h;
+  }
+
+  var allEl = document.getElementById("v-all");
+  var closedEl = document.getElementById("v-closed");
+  function renderAll(){
+    var openList = C.filter(function(c){ return !isClosed(c); });
+    var closedList = C.filter(isClosed);
+    allEl.innerHTML = groupedHTML(openList, false) ||
+      '<p class="p-note">지금 접수 중인 공모전이 없습니다.</p>';
+    closedEl.innerHTML = '<p class="p-note">접수가 끝난 공모전입니다. 선택·메모는 그대로 남아 있습니다.</p>' +
+      groupedHTML(closedList, true);
+    document.getElementById("n-open").textContent = openList.length;
+    document.querySelector('#tabs [data-v="all"] .n').textContent = openList.length;
+    document.querySelector('#tabs [data-v="closed"] .n').textContent = closedList.length;
   }
 
   var pickedEl = document.getElementById("picked");
@@ -1657,7 +1677,7 @@
   document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ closePop(); closeSheet(); } });
 
   /* ---------- 탭 ---------- */
-  var VIEWS = [{id:"all", label:"공모전"}, {id:"pick", label:"선택 후보"}, {id:"final", label:"최종 선택"}];
+  var VIEWS = [{id:"all", label:"공모전"}, {id:"pick", label:"선택 후보"}, {id:"final", label:"최종 선택"}, {id:"closed", label:"마감"}];
   var tabs = document.getElementById("tabs");
   tabs.innerHTML = VIEWS.map(function(v,i){
     return '<button type="button" role="tab" data-v="' + v.id + '" aria-selected="' + (i===0) + '">' +
@@ -1669,7 +1689,7 @@
       x.setAttribute("aria-selected", x.getAttribute("data-v") === v ? "true" : "false");
     });
     VIEWS.forEach(function(x){ document.getElementById("v-" + x.id).hidden = (x.id !== v); });
-    document.getElementById("past").hidden = (v !== "all");
+    document.getElementById("past").hidden = (v !== "closed");
     if(v === "pick") autoGrowAll();   // 숨김 상태에서 못 잰 높이를 지금 다시 잡는다
   }
   tabs.addEventListener("click", function(e){
@@ -1713,8 +1733,10 @@
     var j = e.target.closest("[data-jump]");
     if(!j) return;
     e.preventDefault();
-    showView("all");
-    var el = document.getElementById("c-" + cid(j.getAttribute("data-jump")));
+    var jn = j.getAttribute("data-jump");
+    var jc = C.filter(function(c){ return c.name === jn; })[0];
+    showView(jc && isClosed(jc) ? "closed" : "all");   // 마감된 건은 마감 탭에 있다
+    var el = document.getElementById("c-" + cid(jn));
     if(!el) return;
 
     el.classList.remove("flash");
@@ -1753,6 +1775,5 @@
 
   /* ---------- 시작 ---------- */
   loadLocal(); stamp(); render(); connect();
-  document.querySelector('#tabs [data-v="all"] .n').textContent = C.length;
 })();
 </script>
